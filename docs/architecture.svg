@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="720" viewBox="0 0 1240 720" font-family="Inter, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#65E075"/>
+    </marker>
+    <marker id="arrowDim" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5A6B8C"/>
+    </marker>
+  </defs>
+
+  <rect width="1240" height="720" fill="#0B0D12"/>
+  <text x="40" y="52" fill="#E5E7EB" font-size="26" font-weight="700">LLMWatch — Agentic Quality Observatory</text>
+  <text x="40" y="78" fill="#8B949E" font-size="15">Splunk Agentic Ops Hackathon · Observability — sense → detect → investigate → decide → act → log, entirely on Splunk</text>
+
+  <!-- LLM apps -->
+  <rect x="40" y="120" width="200" height="120" rx="10" fill="#151820" stroke="#2A3347"/>
+  <text x="140" y="150" fill="#E5E7EB" font-size="15" font-weight="600" text-anchor="middle">LLM Applications</text>
+  <text x="140" y="174" fill="#8B949E" font-size="12" text-anchor="middle">OpenAI · Gemini ·</text>
+  <text x="140" y="192" fill="#8B949E" font-size="12" text-anchor="middle">gpt-oss · local</text>
+  <text x="140" y="220" fill="#65E075" font-size="11" text-anchor="middle">instrument()</text>
+
+  <!-- Collector -->
+  <rect x="40" y="280" width="200" height="110" rx="10" fill="#151820" stroke="#2A3347"/>
+  <text x="140" y="312" fill="#E5E7EB" font-size="15" font-weight="600" text-anchor="middle">LLMWatch Collector</text>
+  <text x="140" y="338" fill="#8B949E" font-size="12" text-anchor="middle">judge groundedness 0–1</text>
+  <text x="140" y="358" fill="#8B949E" font-size="12" text-anchor="middle">hash prompt · mask tokens</text>
+  <text x="140" y="378" fill="#8B949E" font-size="12" text-anchor="middle">→ Splunk HEC</text>
+
+  <!-- Splunk platform -->
+  <rect x="300" y="120" width="240" height="470" rx="12" fill="#0E1A12" stroke="#1E5E34"/>
+  <text x="420" y="150" fill="#65E075" font-size="16" font-weight="700" text-anchor="middle">Splunk Cloud / Enterprise</text>
+  <rect x="324" y="172" width="192" height="74" rx="8" fill="#10231A" stroke="#1E5E34"/>
+  <text x="420" y="200" fill="#E5E7EB" font-size="13" font-weight="600" text-anchor="middle">index=llmwatch</text>
+  <text x="420" y="222" fill="#8B949E" font-size="11" text-anchor="middle">HEC ingest · llm_events</text>
+  <rect x="324" y="262" width="192" height="64" rx="8" fill="#10231A" stroke="#1E5E34"/>
+  <text x="420" y="288" fill="#E5E7EB" font-size="13" font-weight="600" text-anchor="middle">SPL Analytics</text>
+  <text x="420" y="308" fill="#8B949E" font-size="11" text-anchor="middle">trend · regression · cost</text>
+  <rect x="324" y="342" width="192" height="64" rx="8" fill="#10231A" stroke="#1E5E34"/>
+  <text x="420" y="368" fill="#E5E7EB" font-size="13" font-weight="600" text-anchor="middle">MCP Server</text>
+  <text x="420" y="388" fill="#8B949E" font-size="11" text-anchor="middle">run_splunk_query (agent reads)</text>
+  <rect x="324" y="422" width="192" height="64" rx="8" fill="#10231A" stroke="#1E5E34"/>
+  <text x="420" y="448" fill="#E5E7EB" font-size="13" font-weight="600" text-anchor="middle">Hosted Model</text>
+  <text x="420" y="468" fill="#8B949E" font-size="11" text-anchor="middle">gpt-oss · judge + root-cause</text>
+  <rect x="324" y="502" width="192" height="64" rx="8" fill="#10231A" stroke="#1E5E34"/>
+  <text x="420" y="528" fill="#E5E7EB" font-size="13" font-weight="600" text-anchor="middle">Dashboards + Alerts</text>
+  <text x="420" y="548" fill="#8B949E" font-size="11" text-anchor="middle">Dashboard Studio · regression alert</text>
+
+  <!-- Agent loop -->
+  <rect x="600" y="120" width="600" height="470" rx="12" fill="#11151F" stroke="#0A84FF"/>
+  <text x="900" y="150" fill="#0A84FF" font-size="16" font-weight="700" text-anchor="middle">LLMWatch Agent — closed control loop (run_cycle)</text>
+
+  <g>
+    <rect x="630" y="178" width="240" height="58" rx="8" fill="#1C2030" stroke="#2A3347"/>
+    <text x="650" y="204" fill="#65E075" font-size="13" font-weight="700">1 · SENSE</text>
+    <text x="650" y="224" fill="#C9D2E0" font-size="11">quality_signal() via MCP</text>
+
+    <rect x="930" y="178" width="240" height="58" rx="8" fill="#1C2030" stroke="#2A3347"/>
+    <text x="950" y="204" fill="#65E075" font-size="13" font-weight="700">2 · DETECT</text>
+    <text x="950" y="224" fill="#C9D2E0" font-size="11">current &lt; 0.85 × baseline</text>
+
+    <rect x="930" y="260" width="240" height="58" rx="8" fill="#1C2030" stroke="#2A3347"/>
+    <text x="950" y="286" fill="#65E075" font-size="13" font-weight="700">3 · INVESTIGATE</text>
+    <text x="950" y="306" fill="#C9D2E0" font-size="11">failing examples + hosted-model RCA</text>
+
+    <rect x="630" y="260" width="240" height="58" rx="8" fill="#1C2030" stroke="#2A3347"/>
+    <text x="650" y="286" fill="#65E075" font-size="13" font-weight="700">4 · DECIDE</text>
+    <text x="650" y="306" fill="#C9D2E0" font-size="11">rollback / reroute / incident</text>
+
+    <rect x="630" y="342" width="240" height="78" rx="8" fill="#241420" stroke="#FF6B35"/>
+    <text x="650" y="368" fill="#FF9500" font-size="13" font-weight="700">5 · ACT</text>
+    <text x="650" y="388" fill="#C9D2E0" font-size="11">human-approval gate ◄</text>
+    <text x="650" y="406" fill="#8B949E" font-size="11">destructive = requires_approval</text>
+
+    <rect x="930" y="342" width="240" height="78" rx="8" fill="#1C2030" stroke="#2A3347"/>
+    <text x="950" y="368" fill="#65E075" font-size="13" font-weight="700">6 · LOG</text>
+    <text x="950" y="388" fill="#C9D2E0" font-size="11">decision → index=llmwatch</text>
+    <text x="950" y="406" fill="#8B949E" font-size="11">full audit trail</text>
+
+    <!-- loop arrows -->
+    <line x1="870" y1="207" x2="930" y2="207" stroke="#65E075" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="1050" y1="236" x2="1050" y2="260" stroke="#65E075" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="930" y1="289" x2="870" y2="289" stroke="#65E075" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="750" y1="318" x2="750" y2="342" stroke="#65E075" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="870" y1="381" x2="930" y2="381" stroke="#FF9500" stroke-width="2" marker-end="url(#arrow)"/>
+  </g>
+
+  <rect x="630" y="452" width="540" height="110" rx="8" fill="#0E1622" stroke="#163049"/>
+  <text x="650" y="480" fill="#0A84FF" font-size="13" font-weight="700">Prize-relevant Splunk surface</text>
+  <text x="650" y="504" fill="#C9D2E0" font-size="12">• Best Use of MCP Server — agent reads Splunk via run_splunk_query (initialize handshake)</text>
+  <text x="650" y="526" fill="#C9D2E0" font-size="12">• Best Use of Hosted Models — gpt-oss as LLM-as-judge AND root-cause analyst</text>
+  <text x="650" y="548" fill="#C9D2E0" font-size="12">• Observability core — HEC + SPL + Dashboard Studio + scheduled alert</text>
+
+  <!-- cross-component arrows -->
+  <line x1="140" y1="240" x2="140" y2="280" stroke="#65E075" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="240" y1="330" x2="300" y2="240" stroke="#65E075" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="250" y="295" fill="#65E075" font-size="11">HEC</text>
+  <line x1="540" y1="374" x2="600" y2="300" stroke="#5A6B8C" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrowDim)"/>
+  <text x="548" y="330" fill="#8B949E" font-size="11">MCP read</text>
+  <line x1="600" y1="540" x2="540" y2="540" stroke="#5A6B8C" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrowDim)"/>
+  <text x="548" y="560" fill="#8B949E" font-size="11">act</text>
+
+  <text x="40" y="660" fill="#5A6B8C" font-size="12">Air-gapped demo: LLMWATCH_DEMO=1 (default) runs the full loop offline. Live: LLMWATCH_DEMO=0 + MCP/hosted-model tokens.</text>
+  <text x="40" y="682" fill="#5A6B8C" font-size="12">© 2026 LearnHubPlay BV · MIT License</text>
+</svg>

@@ -1,0 +1,39 @@
+/* LLMWatch — SPL analytics. index=llmwatch sourcetype=llm_events */
+
+/* 1. Quality trend over time, by model version */
+index=llmwatch sourcetype=llm_events
+| timechart span=1h avg(groundedness_score) as avg_quality,
+                    avg(latency_ms) as avg_latency,
+                    avg(output_tokens) as avg_tokens by model_version
+| eval quality_band=case(avg_quality>=0.6,"GOOD", avg_quality>=0.3,"DEGRADED", true(),"POOR")
+
+/* 2. Regression detection — current hour vs 24h baseline */
+index=llmwatch sourcetype=llm_events
+| eval bucket=if(_time>=relative_time(now(),"-1h@h"),"current","baseline")
+| stats avg(groundedness_score) as avg_score by model_version bucket
+| eventstats values(eval(if(bucket="baseline",avg_score,null()))) as base by model_version
+| where bucket="current" AND avg_score < base*0.85
+| eval drop_pct=round((1-avg_score/base)*100,1), status="REGRESSION_DETECTED"
+
+/* 3. Hallucination rate by model version */
+index=llmwatch sourcetype=llm_events
+| where groundedness_score<0.3
+| stats count as hallucinations, dc(session_id) as affected_sessions by model_version, date_mday
+| eval hallucination_rate=round(hallucinations/affected_sessions*100,1)
+| sort -hallucination_rate
+
+/* 4. Cost vs quality efficiency */
+index=llmwatch sourcetype=llm_events
+| eval cost_per_call=(input_tokens*0.00001)+(output_tokens*0.00003)
+| stats avg(groundedness_score) as quality, avg(cost_per_call) as cost, count as calls by model_version
+| eval quality_per_dollar=round(quality/cost,1)
+| sort -quality_per_dollar
+
+/* 5. Context impact — groundedness with vs without retrieval context */
+index=llmwatch sourcetype=llm_events
+| stats avg(groundedness_score) as avg_quality, count as calls by context_provided
+
+/* 6. Agent action audit trail */
+index=llmwatch sourcetype=llm_agent_actions
+| table _time status action.kind action.target root_cause.confidence result.detail
+| sort -_time

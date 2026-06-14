@@ -1,0 +1,3 @@
+# LLMWatch runtime deps. The demo (LLMWATCH_DEMO=1) runs with ZERO of these —
+# they are only needed to talk to a live Splunk instance.
+requests>=2.31

@@ -1,0 +1,25 @@
+<!-- LLMWatch Quality Regression Alert. Fires the agent's run_cycle as an action. -->
+<alert name="LLMWatch Quality Regression">
+  <search>
+    index=llmwatch sourcetype=llm_events
+    | timechart span=15m avg(groundedness_score) as quality by model_version
+    | untable _time model_version quality
+    | streamstats window=4 avg(quality) as rolling_avg by model_version
+    | where quality &lt; rolling_avg*0.85
+    | eval message="Quality dropped ".round((1-(quality/rolling_avg))*100,1)."% on ".model_version
+  </search>
+  <trigger><condition>number of results &gt; 0</condition></trigger>
+  <actions>
+    <!-- Primary action: invoke the LLMWatch agent (modular input / webhook) -->
+    <action name="webhook">
+      <param name="url">https://llmwatch-agent.internal/run_cycle</param>
+    </action>
+    <action name="email">
+      <param name="to">ops-team@company.com</param>
+      <param name="subject">LLMWatch: Quality Regression Detected</param>
+    </action>
+    <action name="slack_webhook">
+      <param name="message">$message$ | Agent investigating — see index=llmwatch audit</param>
+    </action>
+  </actions>
+</alert>
