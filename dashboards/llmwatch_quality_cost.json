@@ -1,39 +1,62 @@
 {
-  "title": "LLMWatch — Quality & Cost Efficiency (30-Day)",
-  "description": "Relationship between LLM answer quality and operational cost. Every panel is computed live from index=llmwatch — no hardcoded figures. Import via Dashboards → Create New → Dashboard Studio → Source.",
-  "schemaVersion": "1.1",
+  "title": "LLMWatch \u2014 Quality & Cost Efficiency (30-Day)",
+  "description": "Relationship between LLM answer quality and operational cost. Every panel is computed live from index=llmwatch \u2014 no hardcoded figures. Import via Dashboards \u2192 Create New \u2192 Dashboard Studio \u2192 Source.",
   "visualizations": {
     "viz_total_calls": {
       "type": "splunk.singlevalue",
       "title": "Total LLM Calls (30d)",
-      "dataSources": { "primary": "ds_total_calls" },
-      "options": { "numberPrecision": 0, "majorColor": "#0A84FF" }
+      "dataSources": {
+        "primary": "ds_total_calls"
+      },
+      "options": {
+        "numberPrecision": 0,
+        "majorColor": "#0A84FF"
+      }
     },
     "viz_halluc_caught": {
       "type": "splunk.singlevalue",
       "title": "Hallucinations Caught (groundedness < 0.30)",
-      "dataSources": { "primary": "ds_halluc_caught" },
-      "options": { "numberPrecision": 0, "majorColor": "#FF9500" }
+      "dataSources": {
+        "primary": "ds_halluc_caught"
+      },
+      "options": {
+        "numberPrecision": 0,
+        "majorColor": "#FF9500"
+      }
     },
     "viz_regressions": {
       "type": "splunk.singlevalue",
       "title": "Regressions Detected by Agent",
-      "dataSources": { "primary": "ds_regressions" },
-      "options": { "numberPrecision": 0, "majorColor": "#FF3B30" }
+      "dataSources": {
+        "primary": "ds_regressions"
+      },
+      "options": {
+        "numberPrecision": 0,
+        "majorColor": "#FF3B30"
+      }
     },
     "viz_context_lift": {
       "type": "splunk.singlevalue",
       "title": "Quality Lift With Context",
-      "dataSources": { "primary": "ds_context_lift" },
-      "options": { "unit": "x", "unitPosition": "after", "numberPrecision": 1, "majorColor": "#34C759" }
+      "dataSources": {
+        "primary": "ds_context_lift"
+      },
+      "options": {
+        "unit": "x",
+        "unitPosition": "after",
+        "numberPrecision": 1,
+        "majorColor": "#34C759"
+      }
     },
     "viz_scatter": {
       "type": "splunk.bubble",
-      "title": "Quality vs Cost by Model Version  —  ↑ better, ← cheaper (bubble = call volume)",
-      "dataSources": { "primary": "ds_scatter" },
+      "title": "Quality vs Cost by Model Version  \u2014  \u2191 better, \u2190 cheaper (bubble = call volume)",
+      "dataSources": {
+        "primary": "ds_scatter"
+      },
       "options": {
         "xAxisTitleText": "Cost per 1K calls ($)",
-        "yAxisTitleText": "Avg groundedness (0–1)",
+        "yAxisTitleText": "Avg groundedness (0\u20131)",
         "yAxisMin": 0,
         "yAxisMax": 1,
         "legendDisplay": "right"
@@ -41,15 +64,27 @@
     },
     "viz_qpd": {
       "type": "splunk.bar",
-      "title": "Quality-per-Dollar Ranking — best value first",
-      "dataSources": { "primary": "ds_qpd" },
-      "options": { "legendDisplay": "off", "xAxisTitleText": "groundedness per $" }
+      "title": "Quality-per-Dollar Ranking \u2014 best value first",
+      "dataSources": {
+        "primary": "ds_qpd"
+      },
+      "options": {
+        "legendDisplay": "off",
+        "xAxisTitleText": "groundedness per $"
+      }
     },
     "viz_context_impact": {
       "type": "splunk.column",
-      "title": "Context Impact — groundedness with vs without retrieval context",
-      "dataSources": { "primary": "ds_context_impact" },
-      "options": { "yAxisMin": 0, "yAxisMax": 1, "legendDisplay": "right", "yAxisTitleText": "avg groundedness" }
+      "title": "Context Impact \u2014 groundedness with vs without retrieval context",
+      "dataSources": {
+        "primary": "ds_context_impact"
+      },
+      "options": {
+        "yAxisMin": 0,
+        "yAxisMax": 1,
+        "legendDisplay": "right",
+        "yAxisTitleText": "avg groundedness"
+      }
     }
   },
   "dataSources": {
@@ -57,7 +92,10 @@
       "type": "ds.search",
       "options": {
         "query": "index=llmwatch sourcetype=llm_events | stats count as calls | fields calls",
-        "queryParameters": { "earliest": "-30d@d", "latest": "now" }
+        "queryParameters": {
+          "earliest": "-30d@d",
+          "latest": "now"
+        }
       },
       "name": "Total calls"
     },
@@ -65,7 +103,10 @@
       "type": "ds.search",
       "options": {
         "query": "index=llmwatch sourcetype=llm_events | stats count(eval(groundedness_score<0.3)) as caught | fields caught",
-        "queryParameters": { "earliest": "-30d@d", "latest": "now" }
+        "queryParameters": {
+          "earliest": "-30d@d",
+          "latest": "now"
+        }
       },
       "name": "Hallucinations caught"
     },
@@ -73,7 +114,10 @@
       "type": "ds.search",
       "options": {
         "query": "index=llmwatch sourcetype=llm_agent_actions status=*regression* | stats count as regressions | fields regressions",
-        "queryParameters": { "earliest": "-30d@d", "latest": "now" }
+        "queryParameters": {
+          "earliest": "-30d@d",
+          "latest": "now"
+        }
       },
       "name": "Regressions detected"
     },
@@ -81,7 +125,10 @@
       "type": "ds.search",
       "options": {
         "query": "index=llmwatch sourcetype=llm_events | stats avg(eval(if(context_provided=\"true\",groundedness_score,null()))) as with_ctx, avg(eval(if(context_provided=\"false\",groundedness_score,null()))) as no_ctx | eval lift=round(with_ctx/no_ctx,1) | fields lift",
-        "queryParameters": { "earliest": "-30d@d", "latest": "now" }
+        "queryParameters": {
+          "earliest": "-30d@d",
+          "latest": "now"
+        }
       },
       "name": "Context lift"
     },
@@ -89,7 +136,10 @@
       "type": "ds.search",
       "options": {
         "query": "index=llmwatch sourcetype=llm_events | eval cost_per_1k=((input_tokens*0.00001)+(output_tokens*0.00003))*1000 | stats avg(groundedness_score) as quality, avg(cost_per_1k) as cost_per_1k, count as calls by model_version | eval quality=round(quality,3), cost_per_1k=round(cost_per_1k,3) | table model_version cost_per_1k quality calls",
-        "queryParameters": { "earliest": "-30d@d", "latest": "now" }
+        "queryParameters": {
+          "earliest": "-30d@d",
+          "latest": "now"
+        }
       },
       "name": "Quality vs cost"
     },
@@ -97,7 +147,10 @@
       "type": "ds.search",
       "options": {
         "query": "index=llmwatch sourcetype=llm_events | eval cost_per_call=(input_tokens*0.00001)+(output_tokens*0.00003) | stats avg(groundedness_score) as quality, avg(cost_per_call) as cost by model_version | eval quality_per_dollar=round(quality/cost,1) | sort -quality_per_dollar | table model_version quality_per_dollar",
-        "queryParameters": { "earliest": "-30d@d", "latest": "now" }
+        "queryParameters": {
+          "earliest": "-30d@d",
+          "latest": "now"
+        }
       },
       "name": "Quality per dollar"
     },
@@ -105,7 +158,10 @@
       "type": "ds.search",
       "options": {
         "query": "index=llmwatch sourcetype=llm_events | eval ctx=if(context_provided=\"true\",\"with context\",\"without context\") | chart avg(groundedness_score) as groundedness over model_version by ctx",
-        "queryParameters": { "earliest": "-30d@d", "latest": "now" }
+        "queryParameters": {
+          "earliest": "-30d@d",
+          "latest": "now"
+        }
       },
       "name": "Context impact"
     }
@@ -114,21 +170,107 @@
     "input_timerange": {
       "type": "input.timerange",
       "title": "Time range",
-      "options": { "token": "global_time", "defaultValue": "-30d@d,now" }
+      "options": {
+        "token": "global_time",
+        "defaultValue": "-30d@d,now"
+      }
     }
   },
   "layout": {
-    "type": "absolute",
-    "globalInputs": ["input_timerange"],
-    "options": { "width": 1440, "height": 1040 },
-    "structure": [
-      { "item": "viz_total_calls", "type": "block", "position": { "x": 0, "y": 0, "w": 360, "h": 200 } },
-      { "item": "viz_halluc_caught", "type": "block", "position": { "x": 360, "y": 0, "w": 360, "h": 200 } },
-      { "item": "viz_regressions", "type": "block", "position": { "x": 720, "y": 0, "w": 360, "h": 200 } },
-      { "item": "viz_context_lift", "type": "block", "position": { "x": 1080, "y": 0, "w": 360, "h": 200 } },
-      { "item": "viz_scatter", "type": "block", "position": { "x": 0, "y": 200, "w": 1440, "h": 400 } },
-      { "item": "viz_qpd", "type": "block", "position": { "x": 0, "y": 600, "w": 720, "h": 420 } },
-      { "item": "viz_context_impact", "type": "block", "position": { "x": 720, "y": 600, "w": 720, "h": 420 } }
-    ]
+    "tabs": {
+      "items": [
+        {
+          "layoutId": "layout_1",
+          "label": "Overview"
+        }
+      ]
+    },
+    "layoutDefinitions": {
+      "layout_1": {
+        "type": "absolute",
+        "options": {
+          "width": 1440,
+          "height": 1040,
+          "display": "fit-to-width",
+          "backgroundColor": "transparent"
+        },
+        "structure": [
+          {
+            "item": "viz_total_calls",
+            "type": "block",
+            "position": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 200
+            }
+          },
+          {
+            "item": "viz_halluc_caught",
+            "type": "block",
+            "position": {
+              "x": 360,
+              "y": 0,
+              "w": 360,
+              "h": 200
+            }
+          },
+          {
+            "item": "viz_regressions",
+            "type": "block",
+            "position": {
+              "x": 720,
+              "y": 0,
+              "w": 360,
+              "h": 200
+            }
+          },
+          {
+            "item": "viz_context_lift",
+            "type": "block",
+            "position": {
+              "x": 1080,
+              "y": 0,
+              "w": 360,
+              "h": 200
+            }
+          },
+          {
+            "item": "viz_scatter",
+            "type": "block",
+            "position": {
+              "x": 0,
+              "y": 200,
+              "w": 1440,
+              "h": 400
+            }
+          },
+          {
+            "item": "viz_qpd",
+            "type": "block",
+            "position": {
+              "x": 0,
+              "y": 600,
+              "w": 720,
+              "h": 420
+            }
+          },
+          {
+            "item": "viz_context_impact",
+            "type": "block",
+            "position": {
+              "x": 720,
+              "y": 600,
+              "w": 720,
+              "h": 420
+            }
+          }
+        ]
+      }
+    },
+    "globalInputs": [
+      "input_timerange"
+    ],
+    "options": {}
   }
 }

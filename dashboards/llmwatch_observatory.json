@@ -1,12 +1,13 @@
 {
-  "title": "LLMWatch — Production AI Quality Observatory",
-  "description": "Real-time LLM groundedness, hallucination rate, regressions, and the LLMWatch agent's autonomous remediation audit trail. Import via Dashboards → Create New → Dashboard Studio → Source.",
-  "schemaVersion": "1.1",
+  "title": "LLMWatch \u2014 Production AI Quality Observatory",
+  "description": "Real-time LLM groundedness, hallucination rate, regressions, and the LLMWatch agent's autonomous remediation audit trail. Import via Dashboards \u2192 Create New \u2192 Dashboard Studio \u2192 Source.",
   "visualizations": {
     "viz_overall_quality": {
       "type": "splunk.singlevalue",
       "title": "Overall Groundedness (1h)",
-      "dataSources": { "primary": "ds_overall_quality" },
+      "dataSources": {
+        "primary": "ds_overall_quality"
+      },
       "options": {
         "unit": "",
         "numberPrecision": 2,
@@ -16,16 +17,28 @@
       },
       "context": {
         "qualityRange": [
-          { "to": 0.30, "value": "#D41F1F" },
-          { "from": 0.30, "to": 0.60, "value": "#F1813F" },
-          { "from": 0.60, "value": "#118832" }
+          {
+            "to": 0.3,
+            "value": "#D41F1F"
+          },
+          {
+            "from": 0.3,
+            "to": 0.6,
+            "value": "#F1813F"
+          },
+          {
+            "from": 0.6,
+            "value": "#118832"
+          }
         ]
       }
     },
     "viz_hallucination_rate": {
       "type": "splunk.singlevalue",
       "title": "Hallucination Rate (groundedness < 0.30)",
-      "dataSources": { "primary": "ds_hallucination_rate" },
+      "dataSources": {
+        "primary": "ds_hallucination_rate"
+      },
       "options": {
         "unit": "%",
         "unitPosition": "after",
@@ -34,22 +47,41 @@
       },
       "context": {
         "hallRange": [
-          { "to": 2, "value": "#118832" },
-          { "from": 2, "to": 5, "value": "#F1813F" },
-          { "from": 5, "value": "#D41F1F" }
+          {
+            "to": 2,
+            "value": "#118832"
+          },
+          {
+            "from": 2,
+            "to": 5,
+            "value": "#F1813F"
+          },
+          {
+            "from": 5,
+            "value": "#D41F1F"
+          }
         ]
       }
     },
     "viz_context_impact": {
       "type": "splunk.singlevalue",
       "title": "Quality Lift With Retrieval Context",
-      "dataSources": { "primary": "ds_context_impact" },
-      "options": { "unit": "x", "unitPosition": "after", "numberPrecision": 1, "majorColor": "#0A84FF" }
+      "dataSources": {
+        "primary": "ds_context_impact"
+      },
+      "options": {
+        "unit": "x",
+        "unitPosition": "after",
+        "numberPrecision": 1,
+        "majorColor": "#0A84FF"
+      }
     },
     "viz_quality_trend": {
       "type": "splunk.line",
-      "title": "Groundedness by Model Version (7d) — regression shows as a cliff",
-      "dataSources": { "primary": "ds_quality_trend" },
+      "title": "Groundedness by Model Version (7d) \u2014 regression shows as a cliff",
+      "dataSources": {
+        "primary": "ds_quality_trend"
+      },
       "options": {
         "yAxisMin": 0,
         "yAxisMax": 1,
@@ -60,8 +92,10 @@
     },
     "viz_model_table": {
       "type": "splunk.table",
-      "title": "Model Comparison — quality, hallucinations, cost/call",
-      "dataSources": { "primary": "ds_model_table" },
+      "title": "Model Comparison \u2014 quality, hallucinations, cost/call",
+      "dataSources": {
+        "primary": "ds_model_table"
+      },
       "options": {
         "tableFormat": {
           "rowBackgroundColors": "> table | seriesByName('status') | matchValue(statusColors)"
@@ -69,15 +103,23 @@
       },
       "context": {
         "statusColors": [
-          { "match": "DEGRADED", "value": "#2A1A0A" },
-          { "match": "GOOD", "value": "#0E1A0E" }
+          {
+            "match": "DEGRADED",
+            "value": "#2A1A0A"
+          },
+          {
+            "match": "GOOD",
+            "value": "#0E1A0E"
+          }
         ]
       }
     },
     "viz_agent_audit": {
       "type": "splunk.table",
-      "title": "🤖 Agent Decision Audit Trail (sense → root-cause → act)",
-      "dataSources": { "primary": "ds_agent_audit" },
+      "title": "\ud83e\udd16 Agent Decision Audit Trail (sense \u2192 root-cause \u2192 act)",
+      "dataSources": {
+        "primary": "ds_agent_audit"
+      },
       "options": {}
     }
   },
@@ -86,7 +128,10 @@
       "type": "ds.search",
       "options": {
         "query": "index=llmwatch sourcetype=llm_events earliest=-1h | stats avg(groundedness_score) as quality | eval quality=round(quality,2)",
-        "queryParameters": { "earliest": "-1h", "latest": "now" }
+        "queryParameters": {
+          "earliest": "-1h",
+          "latest": "now"
+        }
       },
       "name": "Overall quality"
     },
@@ -94,7 +139,10 @@
       "type": "ds.search",
       "options": {
         "query": "index=llmwatch sourcetype=llm_events earliest=-24h | stats count as total, count(eval(groundedness_score<0.3)) as halluc | eval rate=round(halluc/total*100,1) | fields rate",
-        "queryParameters": { "earliest": "-24h", "latest": "now" }
+        "queryParameters": {
+          "earliest": "-24h",
+          "latest": "now"
+        }
       },
       "name": "Hallucination rate"
     },
@@ -102,7 +150,10 @@
       "type": "ds.search",
       "options": {
         "query": "index=llmwatch sourcetype=llm_events earliest=-24h | stats avg(eval(if(context_provided=\"true\",groundedness_score,null()))) as with_ctx, avg(eval(if(context_provided=\"false\",groundedness_score,null()))) as no_ctx | eval lift=round(with_ctx/no_ctx,1) | fields lift",
-        "queryParameters": { "earliest": "-24h", "latest": "now" }
+        "queryParameters": {
+          "earliest": "-24h",
+          "latest": "now"
+        }
       },
       "name": "Context impact"
     },
@@ -110,7 +161,10 @@
       "type": "ds.search",
       "options": {
         "query": "index=llmwatch sourcetype=llm_events | timechart span=1h avg(groundedness_score) as avg_quality by model_version",
-        "queryParameters": { "earliest": "-7d@d", "latest": "now" }
+        "queryParameters": {
+          "earliest": "-7d@d",
+          "latest": "now"
+        }
       },
       "name": "Quality trend"
     },
@@ -118,7 +172,10 @@
       "type": "ds.search",
       "options": {
         "query": "index=llmwatch sourcetype=llm_events earliest=-24h | eval cost_per_call=(input_tokens*0.00001)+(output_tokens*0.00003) | stats avg(groundedness_score) as quality, count(eval(groundedness_score<0.3)) as hallucinations, avg(latency_ms) as latency_ms, avg(cost_per_call) as cost, count as calls by model_version | eval quality=round(quality,2), cost=round(cost,4), latency_ms=round(latency_ms,0), status=if(quality>=0.7,\"GOOD\",\"DEGRADED\") | sort -quality",
-        "queryParameters": { "earliest": "-24h", "latest": "now" }
+        "queryParameters": {
+          "earliest": "-24h",
+          "latest": "now"
+        }
       },
       "name": "Model comparison"
     },
@@ -126,7 +183,10 @@
       "type": "ds.search",
       "options": {
         "query": "index=llmwatch sourcetype=llm_agent_actions | table _time status regression.model_version regression.drop_pct root_cause.recommended_action root_cause.confidence result.detail | sort -_time",
-        "queryParameters": { "earliest": "-7d@d", "latest": "now" }
+        "queryParameters": {
+          "earliest": "-7d@d",
+          "latest": "now"
+        }
       },
       "name": "Agent audit trail"
     }
@@ -135,20 +195,97 @@
     "input_timerange": {
       "type": "input.timerange",
       "title": "Time range",
-      "options": { "token": "global_time", "defaultValue": "-24h,now" }
+      "options": {
+        "token": "global_time",
+        "defaultValue": "-24h,now"
+      }
     }
   },
   "layout": {
-    "type": "absolute",
-    "globalInputs": ["input_timerange"],
-    "options": { "width": 1440, "height": 960 },
-    "structure": [
-      { "item": "viz_overall_quality", "type": "block", "position": { "x": 0, "y": 0, "w": 480, "h": 220 } },
-      { "item": "viz_hallucination_rate", "type": "block", "position": { "x": 480, "y": 0, "w": 480, "h": 220 } },
-      { "item": "viz_context_impact", "type": "block", "position": { "x": 960, "y": 0, "w": 480, "h": 220 } },
-      { "item": "viz_quality_trend", "type": "block", "position": { "x": 0, "y": 220, "w": 1440, "h": 320 } },
-      { "item": "viz_model_table", "type": "block", "position": { "x": 0, "y": 540, "w": 720, "h": 400 } },
-      { "item": "viz_agent_audit", "type": "block", "position": { "x": 720, "y": 540, "w": 720, "h": 400 } }
-    ]
+    "tabs": {
+      "items": [
+        {
+          "layoutId": "layout_1",
+          "label": "Overview"
+        }
+      ]
+    },
+    "layoutDefinitions": {
+      "layout_1": {
+        "type": "absolute",
+        "options": {
+          "width": 1440,
+          "height": 960,
+          "display": "fit-to-width",
+          "backgroundColor": "transparent"
+        },
+        "structure": [
+          {
+            "item": "viz_overall_quality",
+            "type": "block",
+            "position": {
+              "x": 0,
+              "y": 0,
+              "w": 480,
+              "h": 220
+            }
+          },
+          {
+            "item": "viz_hallucination_rate",
+            "type": "block",
+            "position": {
+              "x": 480,
+              "y": 0,
+              "w": 480,
+              "h": 220
+            }
+          },
+          {
+            "item": "viz_context_impact",
+            "type": "block",
+            "position": {
+              "x": 960,
+              "y": 0,
+              "w": 480,
+              "h": 220
+            }
+          },
+          {
+            "item": "viz_quality_trend",
+            "type": "block",
+            "position": {
+              "x": 0,
+              "y": 220,
+              "w": 1440,
+              "h": 320
+            }
+          },
+          {
+            "item": "viz_model_table",
+            "type": "block",
+            "position": {
+              "x": 0,
+              "y": 540,
+              "w": 720,
+              "h": 400
+            }
+          },
+          {
+            "item": "viz_agent_audit",
+            "type": "block",
+            "position": {
+              "x": 720,
+              "y": 540,
+              "w": 720,
+              "h": 400
+            }
+          }
+        ]
+      }
+    },
+    "globalInputs": [
+      "input_timerange"
+    ],
+    "options": {}
   }
 }
