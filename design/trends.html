@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LLMWatch — Quality &amp; Cost Analysis</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #0e150e;
+            color: #dde5d8;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chart-grid-line {
+            stroke: #2A3347;
+            stroke-width: 1;
+        }
+        .quadrant-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.05em;
+            fill: #879484;
+            text-transform: uppercase;
+        }
+        .bento-card {
+            background-color: #1b211a;
+            border: 1px solid #3e4a3c;
+            transition: border-color 0.2s ease;
+        }
+        .bento-card:hover {
+            border-color: #64df74;
+        }
+        .metric-value {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#82fd8e",
+                        "surface": "#0e150e",
+                        "surface-container": "#1b211a",
+                        "surface-container-high": "#252c24",
+                        "on-surface": "#dde5d8",
+                        "on-surface-variant": "#bdcab9",
+                        "outline": "#879484",
+                        "outline-variant": "#3e4a3c",
+                        "primary-container": "#65e075",
+                        "on-primary-container": "#006120",
+                        "error": "#ffb4ab",
+                        "error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "metric-md": ["JetBrains Mono"],
+                        "metric-lg": ["JetBrains Mono"],
+                        "code-sm": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "metric-md": ["16px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "metric-lg": ["28px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "code-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="dark overflow-hidden">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-lg h-16 bg-surface border-b border-outline-variant">
+<div class="flex items-center gap-md">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">LLMWatch — Production AI Quality Observatory</span>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-sm bg-surface-container-high px-sm py-xs rounded border border-outline-variant">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-body-md text-body-md text-primary">● Monitoring 3 applications</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface-variant">Powered by Splunk AI</span>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px)] w-64 flex flex-col p-md gap-sm bg-surface-container border-r border-outline-variant">
+<div class="mb-lg">
+<div class="font-headline-sm text-headline-sm font-bold text-primary">LLMWatch</div>
+<div class="text-xs text-on-surface-variant uppercase tracking-widest">AI Monitoring</div>
+</div>
+<nav class="flex-1 flex flex-col gap-xs">
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-variant hover:text-on-surface rounded-lg transition-all duration-150" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Observatory</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-variant hover:text-on-surface rounded-lg transition-all duration-150" href="#">
+<span class="material-symbols-outlined">troubleshoot</span>
+<span class="font-body-md text-body-md">Investigation</span>
+</a>
+<a class="flex items-center gap-md p-sm bg-primary-container text-on-primary-container font-bold rounded-lg translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-body-md text-body-md">Trends</span>
+</a>
+</nav>
+<div class="mt-auto pt-md border-t border-outline-variant flex flex-col gap-xs">
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-variant rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-variant rounded-lg" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-md text-body-md">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 mt-16 p-lg h-[calc(100vh-64px)] overflow-y-auto overflow-x-hidden">
+<header class="mb-lg flex justify-between items-end">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">30-Day Quality &amp; Cost Analysis</h1>
+<p class="text-on-surface-variant font-body-md">Systematic audit of grounding scores vs infrastructure expenditure.</p>
+</div>
+<div class="flex gap-sm">
+<button class="px-md py-sm bg-surface-container-high border border-outline-variant text-on-surface rounded flex items-center gap-sm hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">calendar_today</span>
+<span class="text-sm font-medium">Last 30 Days</span>
+</button>
+<button class="px-md py-sm bg-primary text-surface font-bold rounded flex items-center gap-sm active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+<span class="text-sm">Export Audit</span>
+</button>
+</div>
+</header>
+<!-- Metrics Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-md mb-lg">
+<div class="bento-card p-md rounded-lg flex flex-col gap-xs">
+<span class="text-xs text-on-surface-variant uppercase tracking-wider">Total LLM Calls</span>
+<span class="font-metric-lg text-metric-lg text-on-surface">24,847</span>
+<span class="text-[10px] text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">trending_up</span> +12.4% vs prev. month
+                </span>
+</div>
+<div class="bento-card p-md rounded-lg flex flex-col gap-xs">
+<span class="text-xs text-on-surface-variant uppercase tracking-wider">Hallucinations Prevented</span>
+<span class="font-metric-lg text-metric-lg text-primary">1,842</span>
+<span class="text-[10px] text-on-surface-variant">Estimated by SigMap Guardrails</span>
+</div>
+<div class="bento-card p-md rounded-lg flex flex-col gap-xs">
+<span class="text-xs text-on-surface-variant uppercase tracking-wider">Token Savings</span>
+<span class="font-metric-lg text-metric-lg text-on-surface">€234</span>
+<span class="text-[10px] text-on-surface-variant">Via context compression techniques</span>
+</div>
+<div class="bento-card p-md rounded-lg flex flex-col gap-xs border-l-4 border-l-primary">
+<span class="text-xs text-on-surface-variant uppercase tracking-wider">Regressions Detected</span>
+<span class="font-metric-lg text-metric-lg text-on-surface">3</span>
+<span class="text-[10px] text-primary">Resolved &lt; 2h avg.</span>
+</div>
+</div>
+<!-- Central Visualization -->
+<div class="grid grid-cols-12 gap-md h-full min-h-[600px] mb-lg">
+<!-- Scatter Plot Centerpiece -->
+<div class="col-span-12 lg:col-span-8 bento-card rounded-lg p-lg relative flex flex-col">
+<div class="flex justify-between items-center mb-md">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Quality vs. Cost Performance Matrix</h2>
+<div class="flex gap-md items-center text-[10px] text-on-surface-variant uppercase font-bold">
+<div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary"></span> Optimal</div>
+<div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Suboptimal</div>
+</div>
+</div>
+<div class="flex-1 relative border-l border-b border-outline-variant ml-8 mb-8 mt-4">
+<!-- Quadrant Labels -->
+<div class="absolute top-4 left-4 quadrant-label text-primary">EFFICIENT ✅</div>
+<div class="absolute top-4 right-4 quadrant-label">PREMIUM 💰</div>
+<div class="absolute bottom-4 left-4 quadrant-label text-amber-500">LOW VALUE ⚠️</div>
+<div class="absolute bottom-4 right-4 quadrant-label text-error">AVOID 🚫</div>
+<!-- Axes Labels -->
+<div class="absolute -left-12 top-1/2 -rotate-90 transform origin-center text-[10px] uppercase text-outline tracking-widest whitespace-nowrap">Avg Groundedness (0.0 - 1.0)</div>
+<div class="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] uppercase text-outline tracking-widest">Cost per 1K Calls ($0 - $10)</div>
+<!-- Bubbles -->
+<!-- gemini-2.0-flash v2.2 (Top-left, large green) -->
+<div class="absolute left-[15%] bottom-[85%] group">
+<div class="w-12 h-12 bg-primary/40 border-2 border-primary rounded-full flex items-center justify-center animate-pulse cursor-help">
+<span class="text-[8px] font-bold text-surface text-center px-1">Gemini 2.2</span>
+</div>
+<div class="absolute hidden group-hover:block bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-sm bg-surface-container-high border border-primary rounded z-10 text-[10px]">
+<div class="font-bold text-primary">gemini-2.0-flash v2.2</div>
+<div class="flex justify-between mt-1"><span>Cost:</span> <span class="font-code-sm">$1.20</span></div>
+<div class="flex justify-between"><span>Groundedness:</span> <span class="font-code-sm">0.89</span></div>
+</div>
+</div>
+<!-- gemini-2.0-flash v2.3 (Bottom-left, large amber) -->
+<div class="absolute left-[10%] bottom-[30%] group">
+<div class="w-14 h-14 bg-amber-500/40 border-2 border-amber-500 rounded-full flex items-center justify-center cursor-help">
+<span class="text-[8px] font-bold text-surface text-center px-1">Gemini 2.3</span>
+</div>
+</div>
+<!-- gpt-4o-mini (Top-left, small green) -->
+<div class="absolute left-[8%] bottom-[92%] group">
+<div class="w-6 h-6 bg-primary border border-surface rounded-full cursor-help shadow-lg"></div>
+<div class="absolute top-full left-1/2 -translate-x-1/2 mt-1 text-[8px] text-on-surface whitespace-nowrap">GPT-4o Mini</div>
+</div>
+<!-- gpt-4o (Top-right, medium green) -->
+<div class="absolute left-[75%] bottom-[82%] group">
+<div class="w-10 h-10 bg-primary/30 border-2 border-primary rounded-full flex items-center justify-center cursor-help">
+<span class="text-[8px] font-bold text-on-surface text-center px-1">GPT-4o</span>
+</div>
+</div>
+<!-- Grid Lines SVG Overlay -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+<line stroke="#2A3347" stroke-dasharray="4 4" x1="50%" x2="50%" y1="0" y2="100%"></line>
+<line stroke="#2A3347" stroke-dasharray="4 4" x1="0" x2="100%" y1="50%" y2="50%"></line>
+</svg>
+</div>
+</div>
+<!-- Side Cards -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-md">
+<!-- Bang for Buck Chart -->
+<div class="bento-card rounded-lg p-md flex-1">
+<h3 class="font-headline-sm text-[16px] mb-md text-on-surface flex items-center justify-between">
+                        Bang for Buck
+                        <span class="text-[10px] text-on-surface-variant font-normal">Quality / $</span>
+</h3>
+<div class="space-y-4">
+<div class="space-y-1">
+<div class="flex justify-between text-[11px]">
+<span class="font-bold text-primary">GPT-4o Mini</span>
+<span class="font-code-sm">74.2x</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 100%"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-[11px]">
+<span class="font-bold text-on-surface">Gemini 2.2</span>
+<span class="font-code-sm">62.8x</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary opacity-80 rounded-full" style="width: 85%"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-[11px]">
+<span class="font-bold text-on-surface">GPT-4o</span>
+<span class="font-code-sm">12.1x</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary opacity-60 rounded-full" style="width: 16%"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-[11px]">
+<span class="font-bold text-amber-500">Gemini 2.3</span>
+<span class="font-code-sm">4.2x</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-amber-500 rounded-full" style="width: 6%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Context Impact Card -->
+<div class="bento-card rounded-lg p-md flex-1 flex flex-col">
+<h3 class="font-headline-sm text-[16px] mb-sm text-on-surface">Context Impact Analysis</h3>
+<p class="text-[11px] text-on-surface-variant mb-md leading-relaxed italic">
+                        "Context via SigMap improves quality 3.8× across all models"
+                    </p>
+<div class="flex-1 flex items-end gap-md justify-between px-md pb-xs">
+<!-- Group 1: Gemini -->
+<div class="flex gap-1 items-end h-full w-full">
+<div class="relative w-1/2 h-[22%] bg-surface-container-highest border border-outline-variant group cursor-help">
+<div class="absolute -top-6 left-0 text-[9px] text-on-surface-variant font-code-sm opacity-0 group-hover:opacity-100">0.22</div>
+</div>
+<div class="relative w-1/2 h-[82%] bg-primary border border-primary group cursor-help">
+<div class="absolute -top-6 left-0 text-[9px] text-primary font-code-sm opacity-0 group-hover:opacity-100">0.82</div>
+</div>
+</div>
+<!-- Group 2: GPT -->
+<div class="flex gap-1 items-end h-full w-full">
+<div class="relative w-1/2 h-[18%] bg-surface-container-highest border border-outline-variant group"></div>
+<div class="relative w-1/2 h-[88%] bg-primary border border-primary group"></div>
+</div>
+<!-- Group 3: Custom -->
+<div class="flex gap-1 items-end h-full w-full">
+<div class="relative w-1/2 h-[25%] bg-surface-container-highest border border-outline-variant group"></div>
+<div class="relative w-1/2 h-[76%] bg-primary border border-primary group"></div>
+</div>
+</div>
+<div class="flex justify-between text-[9px] uppercase tracking-tighter text-outline px-sm mt-2">
+<span>Gemini Fam</span>
+<span>GPT Fam</span>
+<span>Mistral Lg</span>
+</div>
+<div class="mt-md flex gap-lg text-[10px] justify-center border-t border-outline-variant pt-sm">
+<div class="flex items-center gap-2"><span class="w-3 h-3 bg-surface-container-highest"></span> Without</div>
+<div class="flex items-center gap-2"><span class="w-3 h-3 bg-primary"></span> SigMap Context</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Detailed Audit Table -->
+<div class="bento-card rounded-lg overflow-hidden mb-lg">
+<div class="px-md py-sm border-b border-outline-variant bg-surface-container-high flex justify-between items-center">
+<span class="text-sm font-bold uppercase tracking-widest text-on-surface">Model Health Audit Trail</span>
+<span class="font-code-sm text-xs text-on-surface-variant">n=4 models monitored</span>
+</div>
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-[10px] uppercase font-bold text-outline">
+<th class="px-md py-sm border-b border-outline-variant">Model ID</th>
+<th class="px-md py-sm border-b border-outline-variant">Status</th>
+<th class="px-md py-sm border-b border-outline-variant">Groundedness</th>
+<th class="px-md py-sm border-b border-outline-variant">Latency (P99)</th>
+<th class="px-md py-sm border-b border-outline-variant text-right">30d Cost</th>
+</tr>
+</thead>
+<tbody class="font-code-sm text-[12px] text-on-surface">
+<tr class="hover:bg-surface-container-high transition-colors border-b border-outline-variant">
+<td class="px-md py-sm">gemini-2.0-flash v2.2</td>
+<td class="px-md py-sm"><span class="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-bold border border-primary/30">OPTIMAL</span></td>
+<td class="px-md py-sm">0.89 <span class="text-primary ml-1">↑</span></td>
+<td class="px-md py-sm">342ms</td>
+<td class="px-md py-sm text-right">$4,124.20</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors border-b border-outline-variant">
+<td class="px-md py-sm">gpt-4o-mini</td>
+<td class="px-md py-sm"><span class="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-bold border border-primary/30">OPTIMAL</span></td>
+<td class="px-md py-sm">0.92 <span class="text-primary ml-1">↑</span></td>
+<td class="px-md py-sm">118ms</td>
+<td class="px-md py-sm text-right">$842.12</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors border-b border-outline-variant">
+<td class="px-md py-sm">gpt-4o</td>
+<td class="px-md py-sm"><span class="px-2 py-0.5 rounded-full bg-secondary-fixed/20 text-secondary-fixed text-[10px] font-bold border border-secondary-fixed/30">PREMIUM</span></td>
+<td class="px-md py-sm">0.96 <span class="text-on-surface-variant ml-1">→</span></td>
+<td class="px-md py-sm">1.8s</td>
+<td class="px-md py-sm text-right">$12,980.50</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="px-md py-sm">gemini-2.0-flash v2.3</td>
+<td class="px-md py-sm"><span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-500 text-[10px] font-bold border border-amber-500/30">DEGRADED</span></td>
+<td class="px-md py-sm">0.42 <span class="text-error ml-1">↓</span></td>
+<td class="px-md py-sm">450ms</td>
+<td class="px-md py-sm text-right">$2,104.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Visual Polish Footer -->
+<div class="h-1 bg-gradient-to-r from-primary via-primary-container to-transparent opacity-30 rounded-full mb-xl"></div>
+</main>
+<script>
+        // Micro-interaction for scatter plot hover effects
+        document.querySelectorAll('.group').forEach(bubble => {
+            bubble.addEventListener('mouseenter', () => {
+                bubble.style.zIndex = '20';
+            });
+            bubble.addEventListener('mouseleave', () => {
+                bubble.style.zIndex = '10';
+            });
+        });
+
+        // Simple dashboard heartbeat simulation
+        setInterval(() => {
+            const activeIndicator = document.querySelector('.animate-pulse');
+            if (activeIndicator) {
+                activeIndicator.classList.toggle('opacity-50');
+            }
+        }, 1500);
+    </script>
+</body></html>

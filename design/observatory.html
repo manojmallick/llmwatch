@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LLMWatch — Production AI Quality Observatory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#30372e",
+                    "on-secondary-container": "#002957",
+                    "secondary-fixed-dim": "#aac7ff",
+                    "tertiary-fixed-dim": "#feb693",
+                    "on-error-container": "#ffdad6",
+                    "on-secondary": "#003064",
+                    "on-tertiary-fixed": "#341100",
+                    "primary": "#82fd8e",
+                    "surface-tint": "#64df74",
+                    "surface-dim": "#0e150e",
+                    "on-primary": "#003910",
+                    "on-tertiary": "#50240b",
+                    "secondary": "#aac7ff",
+                    "primary-fixed": "#81fc8d",
+                    "surface": "#0e150e",
+                    "on-tertiary-fixed-variant": "#6b3a1f",
+                    "secondary-fixed": "#d6e3ff",
+                    "outline": "#879484",
+                    "primary-container": "#65e075",
+                    "on-primary-fixed-variant": "#00531a",
+                    "surface-container-high": "#252c24",
+                    "background": "#0e150e",
+                    "on-secondary-fixed-variant": "#00468d",
+                    "inverse-on-surface": "#2b322a",
+                    "error": "#ffb4ab",
+                    "on-tertiary-container": "#7a462a",
+                    "primary-fixed-dim": "#64df74",
+                    "tertiary-fixed": "#ffdbcb",
+                    "on-primary-container": "#006120",
+                    "inverse-primary": "#006e26",
+                    "tertiary-container": "#ffb794",
+                    "on-background": "#dde5d8",
+                    "surface-container-low": "#171d16",
+                    "on-primary-fixed": "#002106",
+                    "outline-variant": "#3e4a3c",
+                    "error-container": "#93000a",
+                    "secondary-container": "#3e90ff",
+                    "surface-bright": "#343b33",
+                    "inverse-surface": "#dde5d8",
+                    "tertiary": "#ffdccd",
+                    "surface-container-lowest": "#091009",
+                    "surface-container": "#1b211a",
+                    "on-surface": "#dde5d8",
+                    "on-secondary-fixed": "#001b3e",
+                    "surface-container-highest": "#30372e",
+                    "on-surface-variant": "#bdcab9",
+                    "on-error": "#690005"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "gutter": "16px",
+                    "md": "16px",
+                    "sm": "8px",
+                    "xs": "4px",
+                    "margin": "24px",
+                    "xl": "32px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "metric-lg": ["JetBrains Mono"],
+                    "code-sm": ["JetBrains Mono"],
+                    "headline-lg": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "metric-md": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "metric-lg": ["28px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "code-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "headline-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "metric-md": ["16px", {"lineHeight": "20px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      body { background-color: #0e150e; color: #dde5d8; }
+      .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+      .card-border { border: 1px solid #3e4a3c; }
+      .tonal-layer-card { background-color: #1b211a; }
+      .metric-monospace { font-family: 'JetBrains Mono', monospace; }
+      .scroll-hide::-webkit-scrollbar { display: none; }
+      .gradient-amber { background: linear-gradient(180deg, rgba(255,191,0,0.1) 0%, rgba(255,191,0,0) 100%); }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-hidden h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-lg h-16 bg-surface dark:bg-surface border-b border-outline-variant dark:border-outline-variant">
+<div class="flex items-center gap-md">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface dark:text-on-surface">LLMWatch — Production AI Quality Observatory</span>
+<div class="ml-xl flex gap-lg">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md" href="observatory.html">Observatory</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="investigation.html">Investigation</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="trends.html">Trends</a>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<span class="text-primary font-body-md text-body-md">● Monitoring 3 applications</span>
+<span class="text-on-surface-variant text-body-sm font-body-sm opacity-70">Powered by Splunk AI</span>
+</div>
+</header>
+<div class="flex flex-1 pt-16 overflow-hidden">
+<!-- SideNavBar (Desktop Fixed) -->
+<nav class="hidden md:flex flex-col p-md gap-sm w-64 bg-surface-container dark:bg-surface-container border-r border-outline-variant dark:border-outline-variant">
+<div class="mb-lg px-sm">
+<h2 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary">LLMWatch</h2>
+<p class="text-on-surface-variant text-body-sm">AI Monitoring</p>
+</div>
+<div class="space-y-1">
+<button class="w-full flex items-center gap-sm p-sm bg-primary-container text-on-primary-container font-bold rounded-lg translate-x-1 transition-transform" onclick="location.href='observatory.html'" style="cursor:pointer">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Observatory</span>
+</button>
+<button class="w-full flex items-center gap-sm p-sm text-on-surface-variant hover:bg-surface-variant hover:text-on-surface rounded-lg transition-all duration-150" onclick="location.href='investigation.html'" style="cursor:pointer">
+<span class="material-symbols-outlined">troubleshoot</span>
+<span class="font-body-md text-body-md">Investigation</span>
+</button>
+<button class="w-full flex items-center gap-sm p-sm text-on-surface-variant hover:bg-surface-variant hover:text-on-surface rounded-lg transition-all duration-150" onclick="location.href='trends.html'" style="cursor:pointer">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-body-md text-body-md">Trends</span>
+</button>
+</div>
+<div class="mt-auto space-y-1">
+<button class="w-full flex items-center gap-sm p-sm text-on-surface-variant hover:bg-surface-variant hover:text-on-surface rounded-lg transition-all duration-150">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</button>
+<button class="w-full flex items-center gap-sm p-sm text-on-surface-variant hover:bg-surface-variant hover:text-on-surface rounded-lg transition-all duration-150">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-md text-body-md">Support</span>
+</button>
+<div class="mt-md pt-md border-t border-outline-variant flex items-center gap-sm px-sm">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold text-xs">SO</div>
+<div class="overflow-hidden">
+<p class="text-on-surface text-body-sm font-bold truncate">Operator 01</p>
+<p class="text-on-surface-variant text-[10px] font-code-sm truncate">SRE-CLUSTER-A</p>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 flex overflow-hidden">
+<!-- Dashboard Canvas -->
+<div class="flex-1 overflow-y-auto p-lg scroll-hide">
+<!-- HEALTH ROW -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter mb-gutter">
+<!-- Overall Quality -->
+<div class="tonal-layer-card card-border p-md rounded-lg flex flex-col items-center justify-center relative overflow-hidden">
+<div class="absolute top-0 right-0 p-sm text-[10px] font-code-sm text-on-surface-variant">24H RANGE</div>
+<h3 class="text-on-surface-variant text-body-sm uppercase tracking-wider mb-md self-start">Overall Quality</h3>
+<div class="relative w-32 h-32 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90">
+<circle cx="64" cy="64" fill="transparent" r="58" stroke="#3e4a3c" stroke-width="8"></circle>
+<circle cx="64" cy="64" fill="transparent" r="58" stroke="#ffbf00" stroke-dasharray="364.4" stroke-dashoffset="94.7" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="font-metric-lg text-metric-lg text-amber-400">0.74</span>
+<span class="text-[10px] font-code-sm text-amber-500 flex items-center">▼ -0.08</span>
+</div>
+</div>
+<p class="mt-md text-on-surface-variant text-body-sm text-center">Status: <span class="text-amber-500 font-bold">DEGRADED</span></p>
+</div>
+<!-- Hallucination Rate -->
+<div class="tonal-layer-card card-border p-md rounded-lg flex flex-col">
+<h3 class="text-on-surface-variant text-body-sm uppercase tracking-wider mb-sm">Hallucination Rate</h3>
+<div class="flex items-baseline gap-sm mb-xs">
+<span class="font-metric-lg text-metric-lg text-red-500">3.2%</span>
+<span class="text-red-400 font-code-sm text-body-sm">▲ +1.1%</span>
+</div>
+<p class="text-on-surface-variant text-body-sm leading-tight mb-md">27 of 847 calls had groundedness &lt; 0.3</p>
+<div class="mt-auto h-12 w-full flex items-end gap-[2px]">
+<!-- Micro sparkline mockup -->
+<div class="bg-red-500/20 w-full h-1/4 rounded-t-xs"></div>
+<div class="bg-red-500/20 w-full h-2/4 rounded-t-xs"></div>
+<div class="bg-red-500/40 w-full h-3/4 rounded-t-xs"></div>
+<div class="bg-red-500/20 w-full h-2/4 rounded-t-xs"></div>
+<div class="bg-red-500/60 w-full h-5/6 rounded-t-xs"></div>
+<div class="bg-red-500/30 w-full h-2/4 rounded-t-xs"></div>
+<div class="bg-red-500 w-full h-full rounded-t-xs"></div>
+</div>
+</div>
+<!-- Context Impact -->
+<div class="tonal-layer-card card-border p-md rounded-lg flex flex-col">
+<h3 class="text-on-surface-variant text-body-sm uppercase tracking-wider mb-md">Context Impact</h3>
+<div class="space-y-sm">
+<div>
+<div class="flex justify-between text-body-sm mb-xs">
+<span class="text-on-surface">With context</span>
+<span class="font-code-sm text-primary">0.81</span>
+</div>
+<div class="h-2 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[81%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-sm mb-xs">
+<span class="text-on-surface-variant">Without context</span>
+<span class="font-code-sm">0.21</span>
+</div>
+<div class="h-2 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-surface-container-highest w-[21%]"></div>
+</div>
+</div>
+</div>
+<p class="mt-md font-bold text-primary text-body-sm">+286% improvement with context</p>
+<div class="mt-xs p-xs bg-primary/10 border border-primary/20 rounded text-[11px] flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+<span>Rec: Use SigMap context for all RAG calls</span>
+</div>
+</div>
+</div>
+<!-- TREND CHART -->
+<div class="tonal-layer-card card-border rounded-lg p-lg mb-gutter relative">
+<div class="flex justify-between items-center mb-lg">
+<h3 class="font-headline-sm text-headline-sm">Groundedness Score by Model Version <span class="text-on-surface-variant text-body-sm ml-sm font-normal">(Last 7 days)</span></h3>
+<div class="flex gap-md text-xs font-code-sm">
+<div class="flex items-center gap-xs"><span class="w-3 h-3 bg-red-500 rounded-full"></span> v2.3</div>
+<div class="flex items-center gap-xs"><span class="w-3 h-3 bg-primary rounded-full"></span> v2.2</div>
+<div class="flex items-center gap-xs"><span class="w-3 h-1 border-b border-dashed border-amber-500"></span> Threshold (0.70)</div>
+</div>
+</div>
+<div class="h-64 w-full relative">
+<!-- Chart Mockup (SVG) -->
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 1000 200">
+<!-- Grid Lines -->
+<line stroke="#3e4a3c" stroke-dasharray="4" x1="0" x2="1000" y1="40" y2="40"></line>
+<line stroke="#3e4a3c" stroke-dasharray="4" x1="0" x2="1000" y1="80" y2="80"></line>
+<line stroke="#3e4a3c" stroke-dasharray="4" x1="0" x2="1000" y1="120" y2="120"></line>
+<line stroke="#3e4a3c" stroke-dasharray="4" x1="0" x2="1000" y1="160" y2="160"></line>
+<!-- Threshold -->
+<line opacity="0.6" stroke="#ffbf00" stroke-dasharray="8" stroke-width="2" x1="0" x2="1000" y1="110" y2="110"></line>
+<!-- Model v2.2 (Green Stable) -->
+<path d="M0,60 L100,58 L200,62 L300,55 L400,60 L500,57 L600,63 L700,59 L800,61 L900,58 L1000,62" fill="none" stroke="#82fd8e" stroke-width="3"></path>
+<!-- Model v2.3 (Red Drop) -->
+<path d="M500,57 L600,65 L700,75 L800,95 L900,135 L1000,155" fill="none" stroke="#ffb4ab" stroke-width="3"></path>
+<!-- Deployment Annotation -->
+<line stroke="#879484" stroke-dasharray="2" stroke-width="1" x1="500" x2="500" y1="0" y2="200"></line>
+</svg>
+<!-- Annotation Label -->
+<div class="absolute left-[50%] top-0 -translate-x-1/2 -mt-4 bg-surface-variant px-xs rounded text-[10px] border border-outline-variant">
+                            v2.3 deployed
+                        </div>
+<!-- Axis Labels -->
+<div class="absolute left-0 bottom-0 -mb-6 w-full flex justify-between text-[10px] font-code-sm text-on-surface-variant">
+<span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span>
+</div>
+</div>
+</div>
+<!-- MODEL COMPARISON TABLE -->
+<div class="tonal-layer-card card-border rounded-lg overflow-hidden">
+<div class="p-md border-b border-outline-variant bg-surface-container-high flex justify-between items-center">
+<h3 class="font-bold text-body-md uppercase tracking-widest text-on-surface-variant">Model Fleet Performance</h3>
+<div class="flex gap-sm">
+<button class="text-xs border border-outline-variant px-sm py-1 rounded hover:bg-surface-variant transition-colors">Export CSV</button>
+<button class="text-xs border border-outline-variant px-sm py-1 rounded hover:bg-surface-variant transition-colors">Settings</button>
+</div>
+</div>
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low text-[11px] font-bold text-on-surface-variant uppercase tracking-tighter">
+<tr>
+<th class="p-md border-b border-outline-variant">Model Deployment</th>
+<th class="p-md border-b border-outline-variant">Calls</th>
+<th class="p-md border-b border-outline-variant text-right">Avg Quality</th>
+<th class="p-md border-b border-outline-variant text-right">Hallucination</th>
+<th class="p-md border-b border-outline-variant text-right">Latency</th>
+<th class="p-md border-b border-outline-variant text-right">Avg Cost</th>
+<th class="p-md border-b border-outline-variant text-center">Health Status</th>
+</tr>
+</thead>
+<tbody class="text-body-sm font-code-sm">
+<tr class="gradient-amber group hover:bg-amber-500/5 transition-colors">
+<td class="p-md border-b border-outline-variant text-on-surface font-body-md font-semibold">gemini-2.0-flash v2.3</td>
+<td class="p-md border-b border-outline-variant">423</td>
+<td class="p-md border-b border-outline-variant text-right text-amber-400">0.61 ❌</td>
+<td class="p-md border-b border-outline-variant text-right text-red-400">4.2%</td>
+<td class="p-md border-b border-outline-variant text-right">2.3s</td>
+<td class="p-md border-b border-outline-variant text-right">$0.0023</td>
+<td class="p-md border-b border-outline-variant text-center">
+<span class="px-2 py-1 bg-amber-500/20 text-amber-500 rounded text-[10px] font-bold">⚠️ DEGRADED</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-variant/20 transition-colors">
+<td class="p-md border-b border-outline-variant text-on-surface font-body-md font-semibold">gemini-2.0-flash v2.2</td>
+<td class="p-md border-b border-outline-variant">312</td>
+<td class="p-md border-b border-outline-variant text-right text-primary">0.84 ✅</td>
+<td class="p-md border-b border-outline-variant text-right">1.1%</td>
+<td class="p-md border-b border-outline-variant text-right">2.1s</td>
+<td class="p-md border-b border-outline-variant text-right">$0.0021</td>
+<td class="p-md border-b border-outline-variant text-center">
+<span class="px-2 py-1 bg-primary/20 text-primary rounded text-[10px] font-bold">✅ GOOD</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-variant/20 transition-colors">
+<td class="p-md border-b border-outline-variant text-on-surface font-body-md font-semibold">gpt-4o-mini</td>
+<td class="p-md border-b border-outline-variant">112</td>
+<td class="p-md border-b border-outline-variant text-right text-primary">0.79 ✅</td>
+<td class="p-md border-b border-outline-variant text-right">1.8%</td>
+<td class="p-md border-b border-outline-variant text-right">1.8s</td>
+<td class="p-md border-b border-outline-variant text-right">$0.0019</td>
+<td class="p-md border-b border-outline-variant text-center">
+<span class="px-2 py-1 bg-primary/20 text-primary rounded text-[10px] font-bold">✅ GOOD</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Sidebar Alerts -->
+<aside class="w-80 bg-surface-container-low border-l border-outline-variant flex flex-col">
+<div class="p-md border-b border-outline-variant bg-surface-container flex justify-between items-center">
+<h3 class="font-bold text-body-md uppercase tracking-widest text-on-surface-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-sm">notifications</span>
+                        Live Alerts
+                    </h3>
+<span class="bg-red-500 text-on-primary font-bold text-[10px] px-2 rounded-full">2 NEW</span>
+</div>
+<div class="flex-1 overflow-y-auto p-md space-y-md scroll-hide">
+<!-- Alert 1 -->
+<div class="p-md bg-red-500/10 border-l-4 border-red-500 rounded-r-lg relative group cursor-pointer hover:bg-red-500/20 transition-colors">
+<div class="flex justify-between items-start mb-xs">
+<span class="text-red-400 text-[10px] font-bold uppercase tracking-tighter">Critical Regression</span>
+<span class="text-on-surface-variant text-[10px] font-code-sm">15:00 CET</span>
+</div>
+<p class="text-on-surface font-semibold text-body-sm mb-xs">Quality regression: gemini v2.3 → 0.61</p>
+<div class="flex gap-xs mt-sm">
+<button class="text-[10px] bg-red-500/20 px-xs py-0.5 rounded border border-red-500/30">Investigate</button>
+<button class="text-[10px] text-on-surface-variant px-xs py-0.5">Dismiss</button>
+</div>
+</div>
+<!-- Alert 2 -->
+<div class="p-md bg-amber-500/10 border-l-4 border-amber-500 rounded-r-lg relative group cursor-pointer hover:bg-amber-500/20 transition-colors">
+<div class="flex justify-between items-start mb-xs">
+<span class="text-amber-500 text-[10px] font-bold uppercase tracking-tighter">Anomaly Warning</span>
+<span class="text-on-surface-variant text-[10px] font-code-sm">14:47 CET</span>
+</div>
+<p class="text-on-surface font-semibold text-body-sm mb-xs">Hallucination spike: 7 calls in 10min</p>
+<div class="flex gap-xs mt-sm">
+<button class="text-[10px] bg-amber-500/20 px-xs py-0.5 rounded border border-amber-500/30">Analyze Trace</button>
+</div>
+</div>
+<!-- Alert 3 -->
+<div class="p-md bg-primary/10 border-l-4 border-primary rounded-r-lg relative opacity-70 hover:opacity-100 transition-opacity">
+<div class="flex justify-between items-start mb-xs">
+<span class="text-primary text-[10px] font-bold uppercase tracking-tighter">Resolved</span>
+<span class="text-on-surface-variant text-[10px] font-code-sm">12:30 CET</span>
+</div>
+<p class="text-on-surface font-semibold text-body-sm">Alert resolved: gpt-4o-mini quality stable</p>
+</div>
+<!-- System Status Widget -->
+<div class="mt-xl p-md border border-outline-variant bg-surface-container rounded-lg">
+<h4 class="text-[11px] font-bold uppercase text-on-surface-variant mb-md">Collector Health</h4>
+<div class="flex items-center justify-between mb-sm">
+<span class="text-body-sm">US-East-1 Ingest</span>
+<div class="flex gap-[2px]">
+<div class="w-1 h-3 bg-primary rounded-full"></div>
+<div class="w-1 h-3 bg-primary rounded-full"></div>
+<div class="w-1 h-3 bg-primary rounded-full"></div>
+<div class="w-1 h-3 bg-primary rounded-full"></div>
+<div class="w-1 h-3 bg-primary rounded-full animate-pulse"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-body-sm">EU-Central-1 Ingest</span>
+<div class="flex gap-[2px]">
+<div class="w-1 h-3 bg-primary rounded-full"></div>
+<div class="w-1 h-3 bg-primary rounded-full"></div>
+<div class="w-1 h-3 bg-primary rounded-full"></div>
+<div class="w-1 h-3 bg-primary rounded-full"></div>
+<div class="w-1 h-3 bg-primary rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="p-md border-t border-outline-variant">
+<div class="bg-surface-variant p-sm rounded text-[10px] font-code-sm text-on-surface-variant">
+                        Last synced: <span class="text-primary">15:04:22 CET</span>
+</div>
+</div>
+</aside>
+</main>
+</div>
+<!-- Background Atmospheric Effect -->
+<div class="fixed inset-0 pointer-events-none opacity-20 -z-10 overflow-hidden">
+<div class="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary/10 blur-[150px] rounded-full"></div>
+<div class="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-red-500/5 blur-[150px] rounded-full"></div>
+</div>
+<script>
+        // Simple interactive feedback for table rows
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('click', () => {
+                console.log('Navigating to model details:', row.cells[0].innerText);
+                // Add a temporary highlight
+                row.classList.add('bg-primary/10');
+                setTimeout(() => row.classList.remove('bg-primary/10'), 300);
+            });
+        });
+
+        // Simulating real-time updates on metrics
+        setInterval(() => {
+            const timeSpan = document.querySelector('.bg-surface-variant .text-primary');
+            if (timeSpan) {
+                const now = new Date();
+                timeSpan.innerText = now.toLocaleTimeString('en-GB', { hour12: false }) + ' CET';
+            }
+        }, 1000);
+    </script>
+</body></html>
