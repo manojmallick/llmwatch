@@ -13,10 +13,13 @@
   }
   html,body{ background:var(--bg); color:var(--text);
     font-family:Inter,-apple-system,Segoe UI,Roboto,sans-serif; }
-  .slide{ width:13.333in; height:7.5in; padding:0.7in 0.85in;
+  .slide{ width:13.333in; height:7.5in; padding:0.8in 0.85in 0.95in;
     position:relative; overflow:hidden; page-break-after:always;
-    display:flex; flex-direction:column; }
+    display:flex; flex-direction:column; justify-content:center; }
   .slide:last-child{ page-break-after:auto; }
+  /* header stays visually anchored; body fills and centers the rest */
+  .head{ flex:0 0 auto; margin-bottom:6px; }
+  .body{ flex:1 1 auto; display:flex; flex-direction:column; justify-content:center; }
   .kicker{ color:var(--green); font-weight:700; letter-spacing:.14em;
     text-transform:uppercase; font-size:13px; margin-bottom:14px; }
   h1{ font-size:62px; line-height:1.03; letter-spacing:-1.5px; }
@@ -57,6 +60,22 @@
     display:inline-flex; align-items:center; justify-content:center;
     color:#06251a; font-weight:900; font-size:24px; vertical-align:middle; }
   ul{ margin-left:20px; margin-top:8px; } li{ margin:7px 0; font-size:17px; }
+  /* architecture diagram */
+  .arch{ display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:6px; }
+  .node{ background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:13px 22px; font-size:16px; text-align:center; min-width:6.2in; }
+  .node .mono{ font-size:15px; }
+  .node small{ display:block; color:var(--muted); font-size:12.5px; margin-top:3px; }
+  .varrow{ color:var(--green); font-size:20px; line-height:1; }
+  .agentbox{ border:1.5px solid var(--green); border-radius:14px; padding:16px 22px 18px;
+    background:rgba(101,224,117,.05); min-width:7.2in; position:relative; margin-top:4px; }
+  .agentlabel{ position:absolute; top:-11px; left:50%; transform:translateX(-50%);
+    background:var(--bg); padding:0 12px; color:var(--green); font-weight:700;
+    font-size:13px; letter-spacing:.06em; }
+  .agentrow{ font-size:15.5px; padding:6px 0; display:flex; gap:10px; align-items:baseline;
+    border-bottom:1px solid rgba(42,51,71,.6); }
+  .agentrow:last-child{ border-bottom:0; }
+  .agentrow b{ flex:0 0 1.9in; color:var(--green); font-size:13px; letter-spacing:.04em; }
 </style>
 </head>
 <body>
@@ -161,22 +180,28 @@
 
 <!-- 7 · ARCHITECTURE -->
 <section class="slide">
-  <div class="kicker">Architecture</div>
-  <h2>HEC in · agent loop · audit out</h2>
-  <div class="term" style="margin-top:22px; line-height:1.5; font-size:13px;">
-LLM apps (any provider)<br>
-&nbsp;&nbsp;│ instrument (prompt hashed, privacy-safe)<br>
-&nbsp;&nbsp;▼<br>
-Collector ──► <span class="green">HEC</span> ──► index=llmwatch ──► Splunk Enterprise / Cloud<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
-&nbsp;&nbsp;┌─────────── <span class="green">LLMWatch Agent</span> ───────────┐<br>
-&nbsp;&nbsp;│ SENSE→DETECT  read <span class="amber">MCP Server</span> / REST · SPL │<br>
-&nbsp;&nbsp;│ INVESTIGATE   <span class="violet">Splunk hosted model</span> root-cause │<br>
-&nbsp;&nbsp;│ DECIDE→ACT    rollback / reroute (approval) │<br>
-&nbsp;&nbsp;│ LOG           audit ──► index=llmwatch       │<br>
-&nbsp;&nbsp;└──────────────────────────────────────────────┘<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
-Dashboards · Alerts · PagerDuty / Slack
+  <div class="head">
+    <div class="kicker">Architecture</div>
+    <h2>HEC in · agent loop · audit out</h2>
+  </div>
+  <div class="body">
+    <div class="arch">
+      <div class="node">LLM apps — any provider
+        <small>instrumented · prompt hashed · privacy-safe</small></div>
+      <div class="varrow">▼</div>
+      <div class="node">Collector&nbsp; →&nbsp; <b class="green">HEC</b>&nbsp; →&nbsp;
+        <span class="mono">index=llmwatch</span>&nbsp; →&nbsp; Splunk Enterprise / Cloud</div>
+      <div class="varrow">▼</div>
+      <div class="agentbox">
+        <div class="agentlabel">LLMWatch Agent</div>
+        <div class="agentrow"><b>SENSE → DETECT</b><span>read Splunk via <span class="amber">MCP Server</span> / REST · SPL vs 24h baseline</span></div>
+        <div class="agentrow"><b>INVESTIGATE</b><span><span class="violet">Splunk hosted model</span> roots-causes the failing calls</span></div>
+        <div class="agentrow"><b>DECIDE → ACT</b><span>rollback / reroute&nbsp; ·&nbsp; <span class="green">human-approval gate</span></span></div>
+        <div class="agentrow"><b>LOG</b><span>audit decision&nbsp; →&nbsp; <span class="mono">index=llmwatch</span></span></div>
+      </div>
+      <div class="varrow">▼</div>
+      <div class="node">Dashboards&nbsp; ·&nbsp; Alerts&nbsp; ·&nbsp; PagerDuty / Slack</div>
+    </div>
   </div>
   <div class="foot"><span>Architecture</span><span>7 / 10</span></div>
 </section>
