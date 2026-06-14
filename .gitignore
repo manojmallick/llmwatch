@@ -4,3 +4,7 @@ __pycache__/
 .env
 *.db
 .DS_Store
+
+# Internal prep — not for the public repo / judges
+DEMO_SCRIPT.md
+SUBMISSION.md
