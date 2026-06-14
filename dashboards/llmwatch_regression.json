@@ -1,0 +1,122 @@
+{
+  "title": "LLMWatch — Regression Investigation",
+  "description": "Drill-down on the active regression: timeline cliff, current vs baseline, the agent's hosted-model root cause, and its remediation audit trail. Import via Dashboards → Create New → Dashboard Studio → Source.",
+  "schemaVersion": "1.1",
+  "visualizations": {
+    "viz_baseline_q": {
+      "type": "splunk.singlevalue",
+      "title": "Baseline Groundedness (v2.3, >1h ago)",
+      "dataSources": { "primary": "ds_baseline_q" },
+      "options": { "numberPrecision": 3, "majorColor": "#118832" }
+    },
+    "viz_current_q": {
+      "type": "splunk.singlevalue",
+      "title": "Current Groundedness (v2.3, last 1h)",
+      "dataSources": { "primary": "ds_current_q" },
+      "options": {
+        "numberPrecision": 3,
+        "majorColor": "> majorValue | rangeValue(qRange)"
+      },
+      "context": { "qRange": [
+        { "to": 0.30, "value": "#D41F1F" },
+        { "from": 0.30, "to": 0.60, "value": "#F1813F" },
+        { "from": 0.60, "value": "#118832" }
+      ] }
+    },
+    "viz_drop": {
+      "type": "splunk.singlevalue",
+      "title": "Quality Drop Detected",
+      "dataSources": { "primary": "ds_drop" },
+      "options": { "unit": "%", "unitPosition": "after", "numberPrecision": 1, "majorColor": "#D41F1F" }
+    },
+    "viz_timeline": {
+      "type": "splunk.line",
+      "title": "Groundedness timeline (5-min) — the regression shows as a cliff",
+      "dataSources": { "primary": "ds_timeline" },
+      "options": {
+        "yAxisMin": 0, "yAxisMax": 1, "legendDisplay": "right",
+        "yAxisTitleText": "avg groundedness", "showRoundedY": true
+      }
+    },
+    "viz_rootcause": {
+      "type": "splunk.table",
+      "title": "Splunk hosted-model root-cause analysis",
+      "dataSources": { "primary": "ds_rootcause" }
+    },
+    "viz_actions": {
+      "type": "splunk.table",
+      "title": "Agent remediation audit trail",
+      "dataSources": { "primary": "ds_actions" }
+    }
+  },
+  "dataSources": {
+    "ds_baseline_q": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=llmwatch sourcetype=llm_events model_version=\"gemini-2.0-flash-v2.3\" | where _time<relative_time(now(),\"-1h@h\") | stats avg(groundedness_score) as q | eval q=round(q,3) | fields q",
+        "queryParameters": { "earliest": "-24h", "latest": "now" }
+      },
+      "name": "Baseline quality"
+    },
+    "ds_current_q": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=llmwatch sourcetype=llm_events model_version=\"gemini-2.0-flash-v2.3\" | where _time>=relative_time(now(),\"-1h@h\") | stats avg(groundedness_score) as q | eval q=round(q,3) | fields q",
+        "queryParameters": { "earliest": "-24h", "latest": "now" }
+      },
+      "name": "Current quality"
+    },
+    "ds_drop": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=llmwatch sourcetype=llm_agent_actions status=regression_remediated | head 1 | table regression.drop_pct | rename regression.drop_pct as drop",
+        "queryParameters": { "earliest": "-24h", "latest": "now" }
+      },
+      "name": "Drop percent"
+    },
+    "ds_timeline": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=llmwatch sourcetype=llm_events | timechart span=5m avg(groundedness_score) as groundedness by model_version",
+        "queryParameters": { "earliest": "-3h", "latest": "now" }
+      },
+      "name": "Timeline"
+    },
+    "ds_rootcause": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=llmwatch sourcetype=llm_agent_actions status=regression_remediated | head 1 | table root_cause.topic_cluster root_cause.confidence root_cause.hypothesis action.display | rename root_cause.topic_cluster as \"Topic cluster\" root_cause.confidence as Confidence root_cause.hypothesis as Hypothesis action.display as \"Action taken\"",
+        "queryParameters": { "earliest": "-24h", "latest": "now" }
+      },
+      "name": "Root cause"
+    },
+    "ds_actions": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=llmwatch sourcetype=llm_agent_actions | table _time status action.kind action.target result.detail | rename action.kind as Action action.target as Target result.detail as Detail status as Status",
+        "queryParameters": { "earliest": "-24h", "latest": "now" }
+      },
+      "name": "Audit trail"
+    }
+  },
+  "inputs": {
+    "input_timerange": {
+      "type": "input.timerange",
+      "title": "Time range",
+      "options": { "token": "global_time", "defaultValue": "-24h,now" }
+    }
+  },
+  "layout": {
+    "type": "absolute",
+    "globalInputs": ["input_timerange"],
+    "options": { "width": 1440, "height": 980 },
+    "structure": [
+      { "item": "viz_baseline_q", "type": "block", "position": { "x": 0, "y": 0, "w": 480, "h": 180 } },
+      { "item": "viz_current_q", "type": "block", "position": { "x": 480, "y": 0, "w": 480, "h": 180 } },
+      { "item": "viz_drop", "type": "block", "position": { "x": 960, "y": 0, "w": 480, "h": 180 } },
+      { "item": "viz_timeline", "type": "block", "position": { "x": 0, "y": 180, "w": 1440, "h": 360 } },
+      { "item": "viz_rootcause", "type": "block", "position": { "x": 0, "y": 540, "w": 1440, "h": 200 } },
+      { "item": "viz_actions", "type": "block", "position": { "x": 0, "y": 740, "w": 1440, "h": 240 } }
+    ]
+  }
+}
