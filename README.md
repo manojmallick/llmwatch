@@ -1,7 +1,21 @@
 # LLMWatch — Agentic Quality Observatory for Production LLMs
 
+<p>
+  <img alt="Splunk" src="https://img.shields.io/badge/Splunk-Agentic%20Ops-65E075?style=flat-square&logo=splunk&logoColor=white">
+  <img alt="Track" src="https://img.shields.io/badge/Track-Observability-0A84FF?style=flat-square">
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white">
+  <img alt="MCP" src="https://img.shields.io/badge/Splunk-MCP%20Server-FF9500?style=flat-square">
+  <img alt="Hosted Models" src="https://img.shields.io/badge/Splunk-Hosted%20Models%20(gpt--oss)-8B5CF6?style=flat-square">
+  <img alt="Tests" src="https://img.shields.io/badge/tests-9%20passing-34C759?style=flat-square&logo=pytest&logoColor=white">
+  <img alt="Live" src="https://img.shields.io/badge/Splunk%20Enterprise-verified%20live-34C759?style=flat-square">
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-black?style=flat-square">
+</p>
+
 > **Splunk Agentic Ops Hackathon · Observability track**
 > *Your LLM got worse last night. Splunk saw it — and rolled it back.*
+
+**Built with:**
+`Splunk HEC` · `SPL` · `Splunk MCP Server` · `Splunk Hosted Models` · `Dashboard Studio` · `Splunk Alerts` · `Python 3.10+` · `requests` · `pytest`
 
 LLM answer quality degrades **silently**. A model update, a prompt change, or a
 drifting RAG index can drop groundedness 20–30% with no error, no red dashboard,

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LLMWatch — Pitch Deck</title>
+<style>
+  @page { size: 13.333in 7.5in; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root{
+    --bg:#0B0D12; --surface:#151820; --card:#1C2030; --border:#2A3347;
+    --green:#65E075; --good:#34C759; --amber:#FF9500; --poor:#FF3B30;
+    --blue:#0A84FF; --violet:#8B5CF6; --text:#E5E7EB; --muted:#8B949E;
+  }
+  html,body{ background:var(--bg); color:var(--text);
+    font-family:Inter,-apple-system,Segoe UI,Roboto,sans-serif; }
+  .slide{ width:13.333in; height:7.5in; padding:0.7in 0.85in;
+    position:relative; overflow:hidden; page-break-after:always;
+    display:flex; flex-direction:column; }
+  .slide:last-child{ page-break-after:auto; }
+  .kicker{ color:var(--green); font-weight:700; letter-spacing:.14em;
+    text-transform:uppercase; font-size:13px; margin-bottom:14px; }
+  h1{ font-size:62px; line-height:1.03; letter-spacing:-1.5px; }
+  h2{ font-size:40px; line-height:1.08; letter-spacing:-.6px; margin-bottom:8px; }
+  .sub{ color:var(--muted); font-size:20px; margin-top:14px; }
+  .mono{ font-family:"SF Mono",ui-monospace,Menlo,monospace; }
+  .foot{ position:absolute; bottom:.45in; left:.85in; right:.85in;
+    display:flex; justify-content:space-between; color:var(--muted);
+    font-size:12px; border-top:1px solid var(--border); padding-top:10px; }
+  .pill{ display:inline-block; padding:5px 12px; border-radius:999px;
+    border:1px solid var(--border); font-size:13px; margin:4px 6px 0 0;
+    color:var(--text); background:var(--surface); }
+  .pill.g{ border-color:var(--green); color:var(--green); }
+  .pill.a{ border-color:var(--amber); color:var(--amber); }
+  .pill.v{ border-color:var(--violet); color:#c4b5fd; }
+  .grid{ display:grid; gap:16px; margin-top:8px; }
+  .g2{ grid-template-columns:1fr 1fr; } .g3{ grid-template-columns:1fr 1fr 1fr; }
+  .card{ background:var(--card); border:1px solid var(--border);
+    border-radius:14px; padding:20px 22px; }
+  .card h3{ font-size:18px; margin-bottom:8px; }
+  .card p{ color:var(--muted); font-size:15px; line-height:1.45; }
+  .big{ font-size:46px; font-weight:800; letter-spacing:-1px; }
+  .green{color:var(--green)} .good{color:var(--good)} .amber{color:var(--amber)}
+  .poor{color:var(--poor)} .blue{color:var(--blue)} .violet{color:#c4b5fd}
+  table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:15px; }
+  th,td{ text-align:left; padding:9px 12px; border-bottom:1px solid var(--border); }
+  th{ color:var(--green); font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
+  .term{ background:#06080c; border:1px solid var(--border); border-radius:12px;
+    padding:18px 20px; font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:14px; line-height:1.7; }
+  .flow{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:18px; }
+  .step{ background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; padding:12px 14px; font-size:14px; }
+  .step b{ display:block; color:var(--green); font-size:12px; letter-spacing:.06em; }
+  .arrow{ color:var(--muted); font-size:20px; }
+  .center{ justify-content:center; align-items:center; text-align:center; }
+  .logo{ width:42px; height:42px; border-radius:10px; background:var(--green);
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#06251a; font-weight:900; font-size:24px; vertical-align:middle; }
+  ul{ margin-left:20px; margin-top:8px; } li{ margin:7px 0; font-size:17px; }
+</style>
+</head>
+<body>
+
+<!-- 1 · TITLE -->
+<section class="slide center">
+  <div class="kicker">Splunk Agentic Ops Hackathon · Observability</div>
+  <h1><span class="logo">L</span> LLMWatch</h1>
+  <div class="sub" style="font-size:26px; max-width:9in;">
+    Your LLM got worse last night.<br><span class="green">Splunk saw it — and rolled it back.</span></div>
+  <div style="margin-top:26px;">
+    <span class="pill g">Agentic Ops</span>
+    <span class="pill">HEC · SPL · Dashboards</span>
+    <span class="pill a">MCP Server</span>
+    <span class="pill v">Hosted Models</span>
+  </div>
+  <div class="foot"><span>LLMWatch — Production AI Quality, Observed &amp; Defended</span><span>github.com/manojmallick/llmwatch</span></div>
+</section>
+
+<!-- 2 · PROBLEM -->
+<section class="slide">
+  <div class="kicker">The Problem</div>
+  <h2>LLM quality degrades <span class="poor">silently</span></h2>
+  <div class="sub">A model update, a prompt change, or a drifting RAG index drops answer quality 20–50% — with <b>no error, no red dashboard, no alert.</b></div>
+  <div class="grid g3" style="margin-top:34px;">
+    <div class="card"><div class="big poor">0</div><h3>alerts fire</h3><p>Standard monitoring watches latency and errors — never <i>groundedness</i>.</p></div>
+    <div class="card"><div class="big amber">days</div><h3>to detect</h3><p>Teams find out from customer complaints, not telemetry.</p></div>
+    <div class="card"><div class="big">−52%</div><h3>real regression</h3><p>A single model bump silently halved answer quality in our live test.</p></div>
+  </div>
+  <div class="sub" style="margin-top:30px;">The metric that matters is <span class="green">never monitored</span>. Splunk already watches infrastructure at scale — point it at <b>answer quality</b>.</div>
+  <div class="foot"><span>The Problem</span><span>2 / 10</span></div>
+</section>
+
+<!-- 3 · SOLUTION -->
+<section class="slide">
+  <div class="kicker">The Solution</div>
+  <h2>An <span class="green">agent</span> that runs on Splunk</h2>
+  <div class="sub">LLMWatch instruments every LLM call into Splunk, then closes the loop — it doesn't just alert a human, it <b>remediates.</b></div>
+  <div class="flow">
+    <div class="step"><b>SENSE</b>read Splunk (MCP/REST)</div><span class="arrow">→</span>
+    <div class="step"><b>DETECT</b>vs 24h baseline</div><span class="arrow">→</span>
+    <div class="step"><b>INVESTIGATE</b>hosted-model root cause</div><span class="arrow">→</span>
+    <div class="step"><b>DECIDE</b>rollback / reroute</div><span class="arrow">→</span>
+    <div class="step"><b>ACT</b>+ approval gate</div><span class="arrow">→</span>
+    <div class="step"><b>LOG</b>audit to Splunk</div>
+  </div>
+  <div class="grid g2" style="margin-top:34px;">
+    <div class="card"><h3 class="green">Passive dashboards stop here</h3><p>“Turn a card red, email ops-team@company.com.” The human still has to notice, investigate, and fix.</p></div>
+    <div class="card" style="border-color:var(--green)"><h3 class="green">LLMWatch keeps going</h3><p>Root-causes with a Splunk hosted model and rolls back the bad model — behind a human-approval gate for safety.</p></div>
+  </div>
+  <div class="foot"><span>The Solution</span><span>3 / 10</span></div>
+</section>
+
+<!-- 4 · SPLUNK CAPABILITIES -->
+<section class="slide">
+  <div class="kicker">How we use Splunk</div>
+  <h2>Five Splunk capabilities, one loop</h2>
+  <table>
+    <tr><th>Capability</th><th>How LLMWatch uses it</th><th>Prize</th></tr>
+    <tr><td><b>HEC</b></td><td>Privacy-safe ingestion of every LLM call (prompts hashed)</td><td>Core</td></tr>
+    <tr><td><b>SPL</b></td><td>Quality trends, regression detection, hallucination rate, cost/quality</td><td>Core</td></tr>
+    <tr><td class="amber"><b>MCP Server</b></td><td>Agent reads Splunk securely over MCP (Cloud) — REST on local Enterprise</td><td class="amber">Best Use of MCP</td></tr>
+    <tr><td class="violet"><b>Hosted Models</b></td><td><span class="mono">gpt-oss</span> as LLM-as-judge <i>and</i> root-cause analyst</td><td class="violet">Best Use of Models</td></tr>
+    <tr><td><b>Dashboard Studio</b></td><td>Real-time Quality Observatory + Regression Investigation</td><td>Design</td></tr>
+  </table>
+  <div class="sub" style="margin-top:24px;">One project, eligible for the <b>Observability</b> prize + <span class="amber">two bonus prizes</span>.</div>
+  <div class="foot"><span>Splunk Capabilities</span><span>4 / 10</span></div>
+</section>
+
+<!-- 5 · PROOF -->
+<section class="slide">
+  <div class="kicker">Proof — verified live</div>
+  <h2>Not a mock. <span class="green">Real Splunk.</span></h2>
+  <div class="sub">Seeded events via HEC, ran the agent against live SPL on a Splunk Enterprise instance:</div>
+  <div class="term" style="margin-top:18px;">
+    <span class="green">SENSE</span>  · pulled 2 model signals from Splunk <span class="muted">[REST]</span><br>
+    <span class="poor">DETECT</span> · gemini-2.0-flash-v2.3 dropped <b class="poor">52.1%</b> (0.84 → 0.402) — REGRESSION<br>
+    <span class="violet">INVESTIGATE</span> · gpt-oss root cause: authentication/authorization <b>[HIGH]</b> → rollback<br>
+    <span class="good">ACT</span>    · executed: Active model v2.3 → v2.2. <b class="good">Traffic restored.</b><br>
+    <span class="blue">LOG</span>    · decision written to index=llmwatch (audit trail)
+  </div>
+  <div class="card" style="margin-top:18px; border-color:var(--good)">
+    <p class="mono" style="color:var(--text); font-size:13px;">// read back out of Splunk — sourcetype=llm_agent_actions<br>
+    { "status":"regression_remediated", "action.kind":"rollback",<br>
+    &nbsp;&nbsp;"result.detail":"Active model v2.3 → v2.2. Traffic restored." }</p>
+  </div>
+  <div class="foot"><span>Proof</span><span>5 / 10</span></div>
+</section>
+
+<!-- 6 · METRIC -->
+<section class="slide">
+  <div class="kicker">The quality metric</div>
+  <h2>Groundedness, scored 0–1</h2>
+  <div class="sub">LLM-as-judge via a Splunk hosted model. Validated against a labelled benchmark:</div>
+  <div class="grid g2" style="margin-top:40px;">
+    <div class="card" style="border-color:var(--good)"><div class="kicker">With retrieval context</div><div class="big good">0.621</div><p>Grounded, cites concrete specifics.</p></div>
+    <div class="card" style="border-color:var(--poor)"><div class="kicker">Without context</div><div class="big poor">0.158</div><p>Generic, hedging, hallucination-prone.</p></div>
+  </div>
+  <div class="sub" style="margin-top:36px;">This one score feeds <b>both</b> Splunk anomaly detection <b>and</b> the agent's detection step. <span class="green">3.9× quality lift</span> from context — measured, not claimed.</div>
+  <div class="foot"><span>Quality Metric</span><span>6 / 10</span></div>
+</section>
+
+<!-- 7 · ARCHITECTURE -->
+<section class="slide">
+  <div class="kicker">Architecture</div>
+  <h2>HEC in · agent loop · audit out</h2>
+  <div class="term" style="margin-top:22px; line-height:1.5; font-size:13px;">
+LLM apps (any provider)<br>
+&nbsp;&nbsp;│ instrument (prompt hashed, privacy-safe)<br>
+&nbsp;&nbsp;▼<br>
+Collector ──► <span class="green">HEC</span> ──► index=llmwatch ──► Splunk Enterprise / Cloud<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+&nbsp;&nbsp;┌─────────── <span class="green">LLMWatch Agent</span> ───────────┐<br>
+&nbsp;&nbsp;│ SENSE→DETECT  read <span class="amber">MCP Server</span> / REST · SPL │<br>
+&nbsp;&nbsp;│ INVESTIGATE   <span class="violet">Splunk hosted model</span> root-cause │<br>
+&nbsp;&nbsp;│ DECIDE→ACT    rollback / reroute (approval) │<br>
+&nbsp;&nbsp;│ LOG           audit ──► index=llmwatch       │<br>
+&nbsp;&nbsp;└──────────────────────────────────────────────┘<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+Dashboards · Alerts · PagerDuty / Slack
+  </div>
+  <div class="foot"><span>Architecture</span><span>7 / 10</span></div>
+</section>
+
+<!-- 8 · WHY IT WINS -->
+<section class="slide">
+  <div class="kicker">Why it wins</div>
+  <h2>Judged on four criteria</h2>
+  <div class="grid g2" style="margin-top:18px;">
+    <div class="card"><h3 class="green">Technological Implementation</h3><p>Real HEC + MCP + hosted model + a working control loop. Verified live, 9 passing tests. Run it in 5 seconds.</p></div>
+    <div class="card"><h3 class="green">Quality of the Idea</h3><p>Meta-observability for LLMs — the groundedness metric nobody monitors. Novel and on-trend.</p></div>
+    <div class="card"><h3 class="green">Potential Impact</h3><p>Every team shipping LLMs has this blind spot. Catches silent drift before customers do.</p></div>
+    <div class="card"><h3 class="green">Design</h3><p>Enterprise dark Quality Observatory in Dashboard Studio. Demos beautifully.</p></div>
+  </div>
+  <div class="sub" style="margin-top:22px;"><b class="green">Agentic</b>, not passive — it <i>acts</i>, with responsible-autonomy safeguards.</div>
+  <div class="foot"><span>Why It Wins</span><span>8 / 10</span></div>
+</section>
+
+<!-- 9 · RESPONSIBLE AUTONOMY -->
+<section class="slide">
+  <div class="kicker">Responsible autonomy</div>
+  <h2>It acts — but it shows its work</h2>
+  <div class="grid g3" style="margin-top:30px;">
+    <div class="card"><h3>🔒 Approval gate</h3><p>Destructive actions (rollback, reroute) wait for one human click unless explicitly autonomous.</p></div>
+    <div class="card"><h3>🧾 Full audit trail</h3><p>Every decision logged back to Splunk — <span class="mono">llm_agent_actions</span> — queryable and reviewable.</p></div>
+    <div class="card"><h3>🛡️ Privacy by default</h3><p>Prompts hashed before ingestion. Secrets env-only and masked in logs.</p></div>
+  </div>
+  <div class="sub" style="margin-top:34px;">The agent earns trust the way an SRE does: <b>transparent decisions, reversible actions, a gate on anything destructive.</b></div>
+  <div class="foot"><span>Responsible Autonomy</span><span>9 / 10</span></div>
+</section>
+
+<!-- 10 · CLOSE -->
+<section class="slide center">
+  <div class="kicker">Production AI, observed &amp; defended</div>
+  <h1>LLMWatch</h1>
+  <div class="sub" style="font-size:24px;">Splunk scale. LLM-as-judge groundedness. One agent closing the loop.</div>
+  <div style="margin-top:24px;">
+    <span class="pill g">HEC</span><span class="pill g">SPL</span>
+    <span class="pill a">MCP Server</span><span class="pill v">Hosted Models</span>
+    <span class="pill">Dashboard Studio</span><span class="pill">Alerts</span>
+  </div>
+  <div class="sub mono" style="margin-top:30px; color:var(--green);">github.com/manojmallick/llmwatch</div>
+  <div class="foot"><span>Built on Splunk · Observability Track</span><span>10 / 10</span></div>
+</section>
+
+</body>
+</html>
