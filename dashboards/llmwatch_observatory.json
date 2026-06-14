@@ -139,7 +139,7 @@
     }
   },
   "layout": {
-    "type": "grid",
+    "type": "absolute",
     "globalInputs": ["input_timerange"],
     "options": { "width": 1440, "height": 960 },
     "structure": [
