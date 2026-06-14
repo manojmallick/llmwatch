@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. LLMWatch.
+# © 2026 Manoj Mallick. LLMWatch.
 """LLM-as-judge groundedness scoring backed by a Splunk hosted model.
 
 This replaces the demo placeholder. It makes a real chat-completions call to a

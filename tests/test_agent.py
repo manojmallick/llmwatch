@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. LLMWatch — unit tests (no network; demo transport).
+# © 2026 Manoj Mallick. LLMWatch — unit tests (no network; demo transport).
 """Fast logic tests for the agentic core. Run: python -m pytest tests/ -q"""
 
 from llmwatch import Config, LLMWatchAgent, SplunkHostedJudge

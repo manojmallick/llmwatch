@@ -17,7 +17,7 @@
 **Built with:**
 `Splunk HEC` · `SPL` · `Splunk MCP Server` · `Splunk Hosted Models` · `Dashboard Studio` · `Splunk Alerts` · `Python 3.10+` · `requests` · `pytest`
 
-**By [Manoj Mallick](https://github.com/manojmallick) · LearnHubPlay BV**
+**By [Manoj Mallick](https://github.com/manojmallick)**
 
 LLM answer quality degrades **silently**. A model update, a prompt change, or a
 drifting RAG index can drop groundedness 20–30% with no error, no red dashboard,
@@ -162,4 +162,4 @@ lets it remediate on its own. Every decision is written back to
 
 ---
 
-*© 2026 LearnHubPlay BV · MIT License*
+*© 2026 Manoj Mallick · MIT License*

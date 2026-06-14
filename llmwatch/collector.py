@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. LLMWatch.
+# © 2026 Manoj Mallick. LLMWatch.
 """Instrumentation collector. Logs every LLM call to Splunk via HEC.
 
 Privacy: prompts are hashed, raw content is sampled and truncated. Never logs

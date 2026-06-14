@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. LLMWatch.
+# © 2026 Manoj Mallick. LLMWatch.
 """Live Splunk transport via the management REST API (port 8089).
 
 On Splunk Cloud the agent reads through the MCP Server. On a local Splunk

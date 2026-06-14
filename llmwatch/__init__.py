@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. LLMWatch — Production LLM Quality Observatory.
+# © 2026 Manoj Mallick. LLMWatch — Production LLM Quality Observatory.
 # Splunk Agentic Ops Hackathon — Observability track.
 """LLMWatch: agentic quality observability for production LLM apps on Splunk.
 

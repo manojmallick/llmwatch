@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. LLMWatch.
+# © 2026 Manoj Mallick. LLMWatch.
 """One-shot Splunk setup for the live test (REST, port 8089).
 
 Ensures the `llmwatch` index exists, enables HEC, and creates/fetches a HEC

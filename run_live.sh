@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# © 2026 LearnHubPlay BV. LLMWatch — one-command live run against real Splunk.
+# © 2026 Manoj Mallick. LLMWatch — one-command live run against real Splunk.
 #
 #   SPLUNK_USER=manoj SPLUNK_PASSWORD=*** ./run_live.sh
 #

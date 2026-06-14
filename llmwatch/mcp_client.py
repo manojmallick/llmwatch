@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. LLMWatch.
+# © 2026 Manoj Mallick. LLMWatch.
 """Splunk MCP Server client.
 
 The agent does not just push events to Splunk — it *reads* from Splunk through

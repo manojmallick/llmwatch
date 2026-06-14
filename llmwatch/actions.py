@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. LLMWatch.
+# © 2026 Manoj Mallick. LLMWatch.
 """Actions the agent can take to remediate a quality regression.
 
 Responsible agentic ops: destructive actions (rollback, reroute) carry

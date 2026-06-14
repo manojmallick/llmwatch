@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. LLMWatch — runnable end-to-end demo.
+# © 2026 Manoj Mallick. LLMWatch — runnable end-to-end demo.
 """Run the full LLMWatch agentic loop with zero network access.
 
     python demo.py            # staged action (human-approval gate ON)

@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. LLMWatch.
+# © 2026 Manoj Mallick. LLMWatch.
 """The LLMWatch Agent — the agentic core.
 
 This is what turns LLMWatch from a passive dashboard into Agentic Ops. On each

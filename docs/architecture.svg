@@ -100,5 +100,5 @@
   <text x="548" y="560" fill="#8B949E" font-size="11">act</text>
 
   <text x="40" y="660" fill="#5A6B8C" font-size="12">Air-gapped demo: LLMWATCH_DEMO=1 (default) runs the full loop offline. Live: LLMWATCH_DEMO=0 + MCP/hosted-model tokens.</text>
-  <text x="40" y="682" fill="#5A6B8C" font-size="12">© 2026 LearnHubPlay BV · MIT License</text>
+  <text x="40" y="682" fill="#5A6B8C" font-size="12">© 2026 Manoj Mallick · MIT License</text>
 </svg>

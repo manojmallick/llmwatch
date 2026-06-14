@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. LLMWatch — live end-to-end test against real Splunk.
+# © 2026 Manoj Mallick. LLMWatch — live end-to-end test against real Splunk.
 """Proves the full loop against a live Splunk Enterprise instance:
 
     1. seed realistic events to Splunk via HEC (baseline + a current regression)
