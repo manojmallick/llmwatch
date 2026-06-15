@@ -151,7 +151,7 @@ llmwatch/
 (groundedness, hallucination rate, context lift, per-model trend, model
 comparison, and the agent's decision audit trail) wired to the SPL in `spl/`.
 
-**Architecture:** ![LLMWatch architecture](docs/architecture.svg)
+**Architecture:** ![LLMWatch architecture](architecture_diagram.png)
 
 ## Responsible autonomy
 
