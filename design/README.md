@@ -1,6 +1,12 @@
-# LLMWatch — UI Design Prototype
+# LLMWatch — UI Design Concept (mockups, not live)
 
-High-fidelity, interactive HTML prototype of the LLMWatch product UI (Stitch
+> ⚠️ **These are static design mockups with *sample data* — not the running
+> product.** They illustrate the target UX only. The **real, working**
+> dashboards render live from `index=llmwatch` on Splunk and live in
+> [`../dashboards/`](../dashboards/) (Dashboard Studio). When in doubt, the
+> live Splunk dashboards are the source of truth; numbers here are illustrative.
+
+High-fidelity, interactive HTML mockups of the LLMWatch product UI (Stitch
 design system, Tailwind + Material Symbols). These three screens define the
 target product experience; the **functional** equivalents run live on Splunk
 Dashboard Studio (see [`../dashboards/`](../dashboards/)).
