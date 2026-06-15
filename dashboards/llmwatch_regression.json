@@ -11,7 +11,11 @@
       "options": {
         "numberPrecision": 3,
         "majorColor": "#118832"
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     },
     "viz_current_q": {
       "type": "splunk.singlevalue",
@@ -39,7 +43,11 @@
             "value": "#118832"
           }
         ]
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     },
     "viz_drop": {
       "type": "splunk.singlevalue",
@@ -52,7 +60,11 @@
         "unitPosition": "after",
         "numberPrecision": 1,
         "majorColor": "#D41F1F"
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     },
     "viz_timeline": {
       "type": "splunk.line",
@@ -66,21 +78,33 @@
         "legendDisplay": "right",
         "yAxisTitleText": "avg groundedness",
         "showRoundedY": true
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     },
     "viz_rootcause": {
       "type": "splunk.table",
       "title": "Splunk hosted-model root-cause analysis",
       "dataSources": {
         "primary": "ds_rootcause"
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     },
     "viz_actions": {
       "type": "splunk.table",
       "title": "Agent remediation audit trail",
       "dataSources": {
         "primary": "ds_actions"
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     }
   },
   "dataSources": {
@@ -247,5 +271,14 @@
       "input_timerange"
     ],
     "options": {}
+  },
+  "defaults": {
+    "dataSources": {
+      "ds.search": {
+        "options": {
+          "queryParameters": {}
+        }
+      }
+    }
   }
 }

@@ -31,7 +31,11 @@
             "value": "#118832"
           }
         ]
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     },
     "viz_hallucination_rate": {
       "type": "splunk.singlevalue",
@@ -61,7 +65,11 @@
             "value": "#D41F1F"
           }
         ]
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     },
     "viz_context_impact": {
       "type": "splunk.singlevalue",
@@ -74,7 +82,11 @@
         "unitPosition": "after",
         "numberPrecision": 1,
         "majorColor": "#0A84FF"
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     },
     "viz_quality_trend": {
       "type": "splunk.line",
@@ -88,7 +100,11 @@
         "legendDisplay": "right",
         "yAxisTitleText": "avg groundedness",
         "showRoundedY": true
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     },
     "viz_model_table": {
       "type": "splunk.table",
@@ -112,7 +128,11 @@
             "value": "#0E1A0E"
           }
         ]
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     },
     "viz_agent_audit": {
       "type": "splunk.table",
@@ -120,7 +140,11 @@
       "dataSources": {
         "primary": "ds_agent_audit"
       },
-      "options": {}
+      "options": {},
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     }
   },
   "dataSources": {
@@ -287,5 +311,14 @@
       "input_timerange"
     ],
     "options": {}
+  },
+  "defaults": {
+    "dataSources": {
+      "ds.search": {
+        "options": {
+          "queryParameters": {}
+        }
+      }
+    }
   }
 }

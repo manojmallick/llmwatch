@@ -11,7 +11,11 @@
       "options": {
         "numberPrecision": 0,
         "majorColor": "#0A84FF"
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     },
     "viz_halluc_caught": {
       "type": "splunk.singlevalue",
@@ -22,7 +26,11 @@
       "options": {
         "numberPrecision": 0,
         "majorColor": "#FF9500"
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     },
     "viz_regressions": {
       "type": "splunk.singlevalue",
@@ -33,7 +41,11 @@
       "options": {
         "numberPrecision": 0,
         "majorColor": "#FF3B30"
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     },
     "viz_context_lift": {
       "type": "splunk.singlevalue",
@@ -46,7 +58,11 @@
         "unitPosition": "after",
         "numberPrecision": 1,
         "majorColor": "#34C759"
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     },
     "viz_scatter": {
       "type": "splunk.bubble",
@@ -60,7 +76,11 @@
         "yAxisMin": 0,
         "yAxisMax": 1,
         "legendDisplay": "right"
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     },
     "viz_qpd": {
       "type": "splunk.bar",
@@ -71,7 +91,11 @@
       "options": {
         "legendDisplay": "off",
         "xAxisTitleText": "groundedness per $"
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     },
     "viz_context_impact": {
       "type": "splunk.column",
@@ -84,7 +108,11 @@
         "yAxisMax": 1,
         "legendDisplay": "right",
         "yAxisTitleText": "avg groundedness"
-      }
+      },
+      "containerOptions": {},
+      "showProgressBar": false,
+      "showLastUpdated": false,
+      "eventHandlers": []
     }
   },
   "dataSources": {
@@ -272,5 +300,14 @@
       "input_timerange"
     ],
     "options": {}
+  },
+  "defaults": {
+    "dataSources": {
+      "ds.search": {
+        "options": {
+          "queryParameters": {}
+        }
+      }
+    }
   }
 }
