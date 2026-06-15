@@ -29,11 +29,14 @@ HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def view_xml(definition: str, label: str) -> str:
-    # label sits outside CDATA → must be XML-escaped (& < > in titles break it)
+    # label sits outside CDATA → must be XML-escaped (& < > in titles break it).
+    # NOTE: do NOT add a <meta type="hiddenElements"> with old Simple-XML
+    # <hiddenElement> tags — Splunk 10.x Dashboard Studio expects meta as JSON in
+    # CDATA, and the old tag form malforms the doc → "Layout undefined is not
+    # defined". Omitting meta entirely is valid and renders correctly.
     return (f'<dashboard version="2" theme="dark">\n  <label>{escape(label)}</label>\n'
             f'  <definition><![CDATA[\n{definition}\n]]></definition>\n'
-            f'  <meta type="hiddenElements"><hiddenElement>splunk.header</hiddenElement>'
-            f'<hiddenElement>splunk.footer</hiddenElement></meta>\n</dashboard>')
+            f'</dashboard>')
 
 
 def install(path: str) -> str:
