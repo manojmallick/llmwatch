@@ -135,7 +135,7 @@
     "ds_scatter": {
       "type": "ds.search",
       "options": {
-        "query": "index=llmwatch sourcetype=llm_events | eval cost_per_1k=((input_tokens*0.00001)+(output_tokens*0.00003))*1000 | stats avg(groundedness_score) as quality, avg(cost_per_1k) as cost_per_1k, count as calls by model_version | eval quality=round(quality,3), cost_per_1k=round(cost_per_1k,3) | table model_version cost_per_1k quality calls",
+        "query": "index=llmwatch sourcetype=llm_events | eval cost_per_1k=((input_tokens*0.00001)+(output_tokens*0.00003))*1000 | stats avg(groundedness_score) as quality, avg(cost_per_1k) as cost_per_1k, count as calls by model_version | eval quality=round(quality,3), cost_per_1k=round(cost_per_1k,3) | table cost_per_1k quality calls model_version",
         "queryParameters": {
           "earliest": "-30d@d",
           "latest": "now"
